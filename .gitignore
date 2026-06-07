@@ -1,0 +1,18 @@
+# SwiftPM
+.build/
+.build/**
+Package.resolved
+
+# macOS
+.DS_Store
+*.app
+*.dSYM.zip
+*.dSYM
+
+# Build output
+dist/
+
+# Xcode (if opened in Xcode)
+*.xcuserdata
+*.xcworkspace/xcuserdata
+DerivedData/
