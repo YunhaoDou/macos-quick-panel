@@ -16,6 +16,8 @@
     <string>1.0.0</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>QuickPanel</string>
     <key>NSHumanReadableCopyright</key>
     <string>MIT License</string>
     <key>NSAppleEventsUsageDescription</key>

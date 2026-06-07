@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- 背景渐变：深邃的靛蓝到紫 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="50%" stop-color="#16213e"/>
+      <stop offset="100%" stop-color="#0f3460"/>
+    </linearGradient>
+
+    <!-- 指示灯渐变（洋红→橙） -->
+    <linearGradient id="indicator1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b6b"/>
+      <stop offset="100%" stop-color="#ffa502"/>
+    </linearGradient>
+
+    <!-- 指示灯渐变（青→蓝） -->
+    <linearGradient id="indicator2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7bed9f"/>
+      <stop offset="100%" stop-color="#70a1ff"/>
+    </linearGradient>
+
+    <!-- 指示灯渐变（紫→粉） -->
+    <linearGradient id="indicator3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a29bfe"/>
+      <stop offset="100%" stop-color="#fd79a8"/>
+    </linearGradient>
+
+    <!-- 表面高光 -->
+    <linearGradient id="highlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 圆角方形底座 -->
+  <rect x="32" y="32" width="960" height="960" rx="210" ry="210" fill="url(#bgGrad)"/>
+
+  <!-- 左上角高光 -->
+  <rect x="32" y="32" width="960" height="480" rx="210" ry="210" fill="url(#highlight)"/>
+
+  <!-- ===== 对角线排列的3个"控制指示灯" ===== -->
+  <!-- 这种斜向排列 vs. Apple的垂直双滑块，完全不同的视觉语言 -->
+
+  <!-- 指示灯 1：左上（洋红→橙）—— 活跃 -->
+  <g transform="translate(280, 260)">
+    <rect x="-70" y="-26" width="140" height="52" rx="14" ry="14"
+          fill="url(#indicator1)" opacity="0.95"/>
+    <!-- 灯条 -->
+    <rect x="-50" y="2" width="62" height="4" rx="2" ry="2" fill="#ffffff" opacity="0.9"/>
+    <rect x="-50" y="-8" width="45" height="4" rx="2" ry="2" fill="#ffffff" opacity="0.4"/>
+    <!-- 指示灯圆点 -->
+    <circle cx="52" cy="0" r="8" fill="#ffffff" opacity="1"/>
+  </g>
+
+  <!-- 指示灯 2：中上（青→蓝）—— 中等活跃 -->
+  <g transform="translate(410, 380)">
+    <rect x="-65" y="-24" width="130" height="48" rx="13" ry="13"
+          fill="url(#indicator2)" opacity="0.85"/>
+    <rect x="-46" y="2" width="52" height="4" rx="2" ry="2" fill="#ffffff" opacity="0.8"/>
+    <rect x="-46" y="-8" width="30" height="4" rx="2" ry="2" fill="#ffffff" opacity="0.3"/>
+    <circle cx="48" cy="0" r="8" fill="#ffffff" opacity="1"/>
+  </g>
+
+  <!-- 指示灯 3：中央下方（紫→粉）—— 待机 -->
+  <g transform="translate(540, 500)">
+    <rect x="-60" y="-22" width="120" height="44" rx="12" ry="12"
+          fill="url(#indicator3)" opacity="0.7"/>
+    <rect x="-42" y="2" width="44" height="4" rx="2" ry="2" fill="#ffffff" opacity="0.7"/>
+    <rect x="-42" y="-8" width="20" height="4" rx="2" ry="2" fill="#ffffff" opacity="0.25"/>
+    <circle cx="44" cy="0" r="7" fill="#ffffff" opacity="0.9"/>
+  </g>
+
+  <!-- 暗示更多功能的延展虚线 -->
+  <g opacity="0.3">
+    <circle cx="680" cy="620" r="10" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <circle cx="620" cy="660" r="6" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+    <circle cx="698" cy="668" r="5" fill="none" stroke="#ffffff" stroke-width="2"/>
+  </g>
+
+  <!-- 底部"快速"指示——速度线 -->
+  <g opacity="0.15" transform="translate(520, 760)">
+    <line x1="-40" y1="0" x2="40" y2="0" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+    <line x1="-20" y1="16" x2="20" y2="16" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-8" y1="30" x2="8" y2="30" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  </g>
+
+  <!-- 外发光 -->
+  <rect x="32" y="32" width="960" height="960" rx="210" ry="210"
+        fill="none" stroke="#ffffff" stroke-width="2" opacity="0.06"/>
+</svg>

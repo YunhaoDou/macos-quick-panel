@@ -41,6 +41,11 @@ cp "$BINARY_PATH" "$APP_BUNDLE/Contents/MacOS/$APP_NAME"
 # Copy Info.plist
 cp "$PROJECT_DIR/Info.plist" "$APP_BUNDLE/Contents/"
 
+# Copy app icon
+if [ -f "$PROJECT_DIR/QuickPanel.icns" ]; then
+    cp "$PROJECT_DIR/QuickPanel.icns" "$APP_BUNDLE/Contents/Resources/"
+fi
+
 # Copy assets
 if [ -d "$PROJECT_DIR/Sources/QuickPanel/Assets.xcassets" ]; then
     cp -r "$PROJECT_DIR/Sources/QuickPanel/Assets.xcassets" "$APP_BUNDLE/Contents/Resources/"

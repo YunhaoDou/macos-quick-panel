@@ -24,7 +24,7 @@ class AppState: ObservableObject {
     @Published var selectedAudioDevice: String = ""
 
     var menuIcon: String {
-        "switch.2"
+        "square.grid.2x2"
     }
 
     init() {
