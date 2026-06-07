@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="QuickPanel.icns" width="120" alt="QuickPanel Logo" />
+  <img src="design/icon_v2.svg" width="120" alt="QuickPanel Logo" />
 </p>
 
 <h1 align="center">QuickPanel</h1>
