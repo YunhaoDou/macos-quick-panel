@@ -5,8 +5,13 @@
 <h1 align="center">QuickPanel</h1>
 
 <p align="center">
-  <strong>macOS 菜单栏快捷操作面板</strong><br />
-  系统控制 · 效率增强 · 一键场景
+  <strong>macOS Menu Bar Quick Control Panel</strong><br />
+  System Controls · Productivity Tools · One-Click Scenes
+</p>
+
+<p align="center">
+  <a href="README.md">🇨🇳 中文</a> ·
+  <a href="README_EN.md">🇬🇧 English</a>
 </p>
 
 <p align="center">
@@ -27,9 +32,11 @@
 
 ---
 
-**QuickPanel** 是一个轻量、开源、免费的 macOS 菜单栏工具箱。点击菜单栏图标即可快速控制系统设置、执行常用操作、或一键切换工作/生活场景，不用打开系统偏好设置，不用装全家桶。
+**QuickPanel** 是一个轻量、开源、免费的 macOS 菜单栏工具箱。点击菜单栏图标即可快速控制系统设置、执行常用操作、或一键切换工作/生活场景。
 
 > 🆓 完全免费 · 🧩 开源可自定义 · ⚡ 800KB 极致轻量 · 🔒 纯本地运行无网络依赖
+
+> 🇬🇧 English version: [README_EN.md](README_EN.md)
 
 ---
 
@@ -37,7 +44,7 @@
 
 ```
 ┌─────────────────────────────────┐
-│ 🔍 搜索文件 / App…               │
+│ 🔍 搜索文件 / App…       ⌥⌘Q    │
 ├─────────────────────────────────┤
 │ 🎛️ 系统控制                      │
 │   🌙 深色模式               ○ ON │
@@ -45,15 +52,23 @@
 │   🔇 勿扰模式               ○    │
 │   🔒 锁定屏幕                ›   │
 ├─────────────────────────────────┤
+│ Ａ 输入 & 桌面                   │
+│   Ａ 输入法 (中/英)            ›  │
+│   🖥️ 桌面图标                ○   │
+├─────────────────────────────────┤
 │ ⚡ 快捷操作                      │
 │   🗑️ 清空废纸篓               ›   │
 │   📝 快速笔记 → Obsidian      ›   │
 │   ⏰ 番茄钟                   ›   │
 │   📋 剪贴板历史                ›   │
 ├─────────────────────────────────┤
+│ 🌐 网络                          │
+│   📶 Wi-Fi 热点名           ▼    │
+├─────────────────────────────────┤
 │ 🏃 一键场景                      │
 │ [💼 工作] [🌙 深夜] [🎤 演示] [🚪 出门] │
 ├─────────────────────────────────┤
+│ ⌨️ 全局快捷键     ⌥⌘Q            │
 │  偏好设置                    退出 │
 └─────────────────────────────────┘
 ```
@@ -63,44 +78,50 @@
 ## 🚀 功能
 
 ### 🎛️ 系统控制
-| 功能 | 说明 | 实现方式 |
-|------|------|---------|
-| **深色模式** | 一键切换 Light / Dark 外观 | `defaults write` + 系统通知 |
-| **音频输出** | 切换扬声器 / 耳机 / AirPods | CoreAudio API / SwitchAudioSource |
-| **勿扰模式** | 开启/关闭专注模式 | System Events AppleScript |
-| **锁定屏幕** | 快速锁屏 | `CGSession -suspend` |
+| 功能 | 说明 |
+|------|------|
+| **深色模式** | 一键切换 Light / Dark |
+| **音频输出** | 切换扬声器 / 耳机 / AirPods |
+| **勿扰模式** | 开启/关闭专注模式 |
+| **锁定屏幕** | 快速锁屏 |
+
+### Ａ 输入 & 桌面
+| 功能 | 说明 |
+|------|------|
+| **输入法切换** | 搜狗拼音/ABC 一键切换 |
+| **桌面图标** | 隐藏/显示桌面图标（演示时有用） |
 
 ### ⚡ 快捷操作
 | 功能 | 说明 |
 |------|------|
 | **清空废纸篓** | 一键清空 `~/.Trash/` |
-| **快速笔记** | 弹出编辑器，保存到 Obsidian 收件箱 |
-| **番茄钟** | 25min 专注 + 5min 休息，支持暂停/重置 |
-| **剪贴板历史** | 监控最近 20 条复制记录，点击即粘贴 |
+| **快速笔记** | 弹出编辑器，保存到 Obsidian |
+| **番茄钟** | 25min 专注 + 5min 休息 |
+| **剪贴板历史** | 最近 20 条，点击即粘贴 |
+
+### 🌐 网络
+| 功能 | 说明 |
+|------|------|
+| **Wi-Fi 列表** | 扫描附近网络，显示信号强度 |
+| **Wi-Fi 切换** | 点击连接，当前网络标识 |
 
 ### 🏃 一键场景
-场景模式让你**一次点击完成一串操作**：
-
-| 场景 | 触发动作 |
-|------|---------|
+| 场景 | 动作 |
+|------|------|
 | 💼 **工作模式** | 打开 VSCode + Chrome + Terminal → 浅色模式 |
 | 🌙 **深夜模式** | 深色模式 → 音量 20% → 关闭消息/Mail |
-| 🎤 **演示模式** | 勿扰开启 → 隐藏桌面图标 → 深色模式 |
-| 🚪 **出门模式** | 关闭工作应用 → 清废纸篓 → 锁屏 |
+| 🎤 **演示模式** | 勿扰 → 隐藏桌面图标 → 深色模式 |
+| 🚪 **出门模式** | 关应用 → 清废纸篓 → 锁屏 |
 
-> 所有场景动作可在 `Features/Macros.swift` 自由修改。
+### ⌨️ 快捷键
+| 快捷键 | 功能 |
+|--------|------|
+| `⌥⌘Q` | 全局唤出 QuickPanel（开发中） |
 
 ---
 
 ## 📦 安装
 
-### 方式一：下载 Release（推荐）
-```bash
-# 从 Releases 下载最新版 QuickPanel.app
-# 拖到 Applications 文件夹即可
-```
-
-### 方式二：源码构建
 ```bash
 git clone https://github.com/YunhaoDou/macos-quick-panel.git
 cd macos-quick-panel
@@ -109,78 +130,37 @@ open dist/QuickPanel.app
 ```
 
 ### 开机自启
-`系统设置 → 通用 → 登录项 → + → 选择 QuickPanel.app`
+`系统设置 → 通用 → 登录项 → + → QuickPanel.app`
 
-### 权限说明
-首次使用部分功能时，macOS 会弹窗请求权限：
-| 权限 | 需要的原因 |
-|------|-----------|
-| **辅助功能** | 切换音频输出、锁屏、控制勿扰 |
-| **自动化 → System Events** | 一键场景中的 AppleScript 调用 |
-
-前往 `系统设置 → 隐私与安全性 → 辅助功能` 允许 QuickPanel 即可。
-
----
-
-## 🎮 使用
-
-点击菜单栏的 ▦ 图标展开面板，所有操作都在面板内完成。
-
-### ⌨️ 快捷键（规划中）
-> 未来将支持全局快捷键唤出面板（`⌥⌘Q` 等）
-
-### 🔧 修改 Obsidian 路径
-编辑 `Sources/QuickPanel/Features/ObsidianManager.swift`：
-```swift
-static var vaultPath: String {
-    UserDefaults.standard.string(forKey: "obsidian_vault_path")
-        ?? "\(NSHomeDirectory())/Documents/Obsidian"  // ← 修改这里
-}
-```
-
-### 🛠️ 自定义场景动作
-编辑 `Sources/QuickPanel/Features/Macros.swift`，修改 `MacroRunner` 中的 shell 命令即可自定义每个场景的行为。
+### 权限
+首次使用部分功能时会弹窗请求权限：
+- **辅助功能** — 切换音频输出、锁屏、控制勿扰
+- 前往 `系统设置 → 隐私与安全性 → 辅助功能` 允许
 
 ---
 
 ## 📊 竞品对比
 
-QuickPanel 属于 **macOS 菜单栏工具箱** 品类，以下是同类产品的详细对比：
+| 维度 | QuickPanel | One Switch | Raycast | Alfred Powerpack | Bartender |
+|------|-----------|-----------|---------|-----------------|-----------|
+| **价格** | 🆓 免费 | ¥38 买断 | 免费 / ¥93 Pro | ¥299 | ¥78 |
+| **开源** | ✅ MIT | ❌ | ❌ | ❌ | ❌ |
+| **菜单栏常驻** | ✅ | ✅ | ❌ 启动器 | ❌ 启动器 | ✅ 图标管理 |
+| **深色模式** | ✅ 一键 | ✅ 一键 | 需插件 | 需工作流 | ❌ |
+| **音频切换** | ✅ 下拉选 | ❌ | 需插件 | 需工作流 | ❌ |
+| **场景宏** | ✅ 4场景 | ❌ | ❌ | ✅ 可配 | ❌ |
+| **番茄钟** | ✅ 内置 | ❌ | 需插件 | ❌ | ❌ |
+| **Wi-Fi 管理** | ✅ 扫描切换 | ❌ | ❌ | ❌ | ❌ |
+| **输入法切换** | ✅ 中/英 | ❌ | ❌ | ❌ | ❌ |
+| **剪贴板历史** | ✅ 20条 | ❌ | ✅ 强大 | ✅ 强大 | ❌ |
+| **快速笔记** | ✅ Obsidian | ❌ | ✅ 插件 | ✅ Snippet | ❌ |
+| **体积** | ~800KB | ~5MB | ~50MB | ~30MB | ~10MB |
 
-| 维度 | QuickPanel | One Switch | Raycast | Alfred Powerpack | Bartender | BetterTouchTool |
-|------|-----------|-----------|---------|-----------------|-----------|----------------|
-| **价格** | 🆓 免费 | ¥38 买断 | 免费 / ¥93 Pro | ¥299 | ¥78 | ¥88 |
-| **开源** | ✅ MIT | ❌ | ❌ | ❌ | ❌ | ❌ |
-| **菜单栏常驻** | ✅ | ✅ | ❌ 启动器 | ❌ 启动器 | ✅ 图标管理 | ✅ 自定义 |
-| **语言** | 中文 / 英文 | 英文 | 英文 | 英文 | 英文 | 英文 |
-| **深色模式** | ✅ 一键 | ✅ 一键 | 需插件 | 需工作流 | ❌ | 需配置 |
-| **音频输出切换** | ✅ 下拉选 | ❌ | 需插件 | 需工作流 | ❌ | 需配置 |
-| **勿扰开关** | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| **场景宏** | ✅ 4场景内置 | ❌ | ❌ | ✅ 可配 | ❌ | ✅ 强大 |
-| **番茄钟** | ✅ 内置 | ❌ | 需插件 | ❌ | ❌ | ❌ |
-| **剪贴板历史** | ✅ 20条 | ❌ | ✅ 强大 | ✅ 强大 | ❌ | ❌ |
-| **快速笔记** | ✅ Obsidian | ❌ | ✅ 插件 | ✅ Snippet | ❌ | ❌ |
-| **菜单栏图标管理** | ❌ | ❌ | ❌ | ❌ | ✅ 核心 | ❌ |
-| **体积** | ~800KB | ~5MB | ~50MB | ~30MB | ~10MB | ~20MB |
-| **技术栈** | SwiftUI | Swift | TS/React | Obj-C/Swift | Swift | Obj-C |
+### 与 One Switch
+One Switch 是最直接竞品。QuickPanel 免费开源，多出番茄钟/剪贴板/Wi-Fi/输入法/场景宏。One Switch 有的隐藏桌面、Night Shift 等未来会补上。
 
-### 与 One Switch 的对比
-
-**One Switch** 是最直接的竞品——都是菜单栏系统开关。差异：
-- One Switch 是闭源付费（¥38），QuickPanel 开源免费
-- QuickPanel 多出：**番茄钟、剪贴板历史、一键场景、QuickNote**
-- One Switch 有 **隐藏桌面图标、屏幕保护、Night Shift** 等 QuickPanel 尚未覆盖的功能
-
-### 与 Raycast 的对比
-
-**Raycast** 是启动器，QuickPanel 是面板，**两者可以共存**：
-- Raycast 需要 `⌘Space` 唤出，适合键盘党深度操作
-- QuickPanel 常驻菜单栏，适合鼠标党快速点击
-- QuickPanel 的一键场景和番茄钟是开箱即用，Raycast 需要装插件
-
-### 为什么不用 Apple 控制中心？
-
-Apple 控制中心只覆盖部分系统功能，且不包含：废纸篓清理、剪贴板历史、番茄钟、笔记、场景宏。QuickPanel 填补了这些空白。
+### 与 Raycast
+**两者可共存**。Raycast 需要快捷键唤出，适合键盘党；QuickPanel 常驻菜单栏，适合鼠标党。QuickPanel 的一键场景和番茄钟开箱即用，Raycast 需插件。
 
 ---
 
@@ -188,63 +168,67 @@ Apple 控制中心只覆盖部分系统功能，且不包含：废纸篓清理�
 
 ```
 macos-quick-panel/
-├── Package.swift                 # SwiftPM 构建配置
-├── Info.plist                    # App bundle 配置 (LSUIElement)
+├── Package.swift                 # SwiftPM 构建
+├── Info.plist                    # LSUIElement = true
 ├── QuickPanel.icns               # App 图标
-├── design/                       # 图标设计源文件
+├── design/                       # 图标设计源 SVG
 │   └── icon_v2.svg
 ├── scripts/
-│   └── build.sh                  # 编译 + .app 打包脚本
+│   └── build.sh                  # 编译 + .app 打包
 └── Sources/
     └── QuickPanel/
-        ├── QuickPanelApp.swift   # @main 入口 + AppState
-        ├── MenuBarContent.swift  # 面板 UI 主视图
+        ├── QuickPanelApp.swift   # @main + AppState
+        ├── MenuBarContent.swift  # 面板 UI + 毛玻璃
         ├── Helpers/
-        │   ├── SystemCommands.swift  # 系统命令 (dark mode / lock / trash)
-        │   ├── AudioManager.swift    # 音频设备管理 (CoreAudio)
-        │   ├── DoNotDisturb.swift    # 勿扰模式开关
-        │   └── ClipboardManager.swift # 剪贴板监听
+        │   ├── SystemCommands.swift   # 系统命令
+        │   ├── AudioManager.swift     # CoreAudio 音频
+        │   ├── DoNotDisturb.swift     # 勿扰
+        │   ├── ClipboardManager.swift # 剪贴板
+        │   ├── WiFiManager.swift      # CoreWLAN Wi-Fi
+        │   ├── InputMethodManager.swift # TIS 输入法
+        │   ├── DesktopIconsManager.swift # 桌面图标
+        │   └── HotkeyManager.swift    # 全局快捷键
         └── Features/
-            ├── PomodoroTimer.swift   # 番茄钟逻辑
-            ├── PomodoroView.swift    # 番茄钟 UI
-            ├── QuickNote.swift       # 快速笔记编辑器
-            ├── ObsidianManager.swift  # Obsidian 写入
-            ├── Macros.swift          # 一键场景执行器
-            └── ClipboardHistoryView.swift # 剪贴板历史 UI
+            ├── PomodoroTimer.swift
+            ├── PomodoroView.swift
+            ├── QuickNote.swift
+            ├── ObsidianManager.swift
+            ├── Macros.swift
+            ├── ClipboardHistoryView.swift
+            └── WiFiListView.swift
 ```
 
 ### 技术栈
 | 层 | 技术 |
 |----|------|
 | **语言** | Swift 5.9+ |
-| **UI 框架** | SwiftUI (MenuBarExtra) + AppKit 桥接 |
+| **UI** | SwiftUI MenuBarExtra + NSVisualEffectView |
 | **音频** | CoreAudio API |
-| **系统调用** | Process (zsh) + AppleScript + DistributedNotificationCenter |
-| **最低系统** | macOS 13.0 (Ventura) |
+| **Wi-Fi** | CoreWLAN 框架 |
+| **输入法** | Carbon TIS API |
+| **快捷键** | Carbon Event HotKey |
+| **系统** | Process (zsh) + AppleScript + DistributedNotificationCenter |
+| **最低** | macOS 13.0 (Ventura) |
 | **构建** | Swift Package Manager |
-| **打包** | 自定义 build.sh → .app bundle + ad-hoc 签名 |
 
 ---
 
 ## 🗺️ 路线图
 
-### v1.1 — 体验优化
-- [ ] 剪贴板自动轮询（当前需手动展开）
-- [ ] 全局快捷键唤出面板
-- [ ] 面板位置记忆（固定/跟随菜单栏）
-- [ ] 番茄钟完成通知
-
-### v1.2 — 更多功能
-- [ ] Wi-Fi 列表快速切换
-- [ ] 隐藏/显示桌面图标
+- [x] 系统控制（深色/音频/DND/锁屏）
+- [x] 快捷操作（废纸篓/笔记/番茄钟/剪贴板）
+- [x] 一键场景（工作/深夜/演示/出门）
+- [x] 自定义 App 图标
+- [x] Wi-Fi 扫描切换
+- [x] 输入法切换（中/英）
+- [x] 桌面图标隐藏/显示
+- [x] 全局快捷键
+- [x] 毛玻璃 UI
+- [ ] 偏好设置窗口
 - [ ] Night Shift 开关
-- [ ] 自定义场景（用户添加/编辑）
-
-### v2.0 — 平台提升
-- [ ] 偏好设置窗口（UI 配置而非改源码）
-- [ ] 插件系统 / 第三方集成
-- [ ] GitHub Releases + CI 自动构建
+- [ ] 自定义场景（用户编辑）
 - [ ] Homebrew Cask 安装
+- [ ] GitHub Releases + CI
 
 ---
 
@@ -253,7 +237,6 @@ macos-quick-panel/
 欢迎 Issue / PR / Feature Request！
 
 ```bash
-# 本地开发
 git clone https://github.com/YunhaoDou/macos-quick-panel.git
 cd macos-quick-panel
 bash scripts/build.sh
@@ -269,5 +252,5 @@ open dist/QuickPanel.app
 ---
 
 <p align="center">
-  <b>QuickPanel</b> — 让 macOS 操控快一点。
+  <a href="README_EN.md">🇬🇧 English Version</a>
 </p>
