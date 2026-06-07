@@ -40,6 +40,7 @@ struct MenuBarContentView: View {
     @State private var showClipboard = false
     @State private var showNoteEditor = false
     @State private var noteContent = ""
+    @State private var showPreferences = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -119,6 +120,10 @@ struct MenuBarContentView: View {
         .sheet(isPresented: $showNoteEditor) {
             QuickNoteEditor(content: $noteContent)
                 .modifier(GlassBackground())
+        }
+        .sheet(isPresented: $showPreferences) {
+            PreferencesView()
+                .environmentObject(state)
         }
     }
 
@@ -312,32 +317,14 @@ struct MenuBarContentView: View {
 
     private var footerRow: some View {
         HStack {
-            Button(action: { state.updater.checkForUpdates() }) {
-                if state.updater.isChecking {
-                    HStack(spacing: 4) {
-                        ProgressView()
-                            .scaleEffect(0.5)
-                            .frame(width: 12, height: 12)
-                        Text("检查中")
-                            .font(.caption)
-                    }
-                } else if state.updater.updateAvailable {
-                    Text("更新 \(state.updater.latestVersion)")
-                        .font(.caption)
-                        .foregroundColor(.blue)
-                } else {
-                    Text("检查更新")
-                        .font(.caption)
-                }
+            Button(action: { showPreferences = true }) {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 11))
+                Text("偏好设置")
+                    .font(.caption)
             }
             .buttonStyle(.plain)
             .foregroundColor(.secondary)
-
-            if state.updater.isDownloading {
-                Text("\(Int(state.updater.downloadProgress * 100))%")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-            }
 
             Spacer()
             Button("退出") {

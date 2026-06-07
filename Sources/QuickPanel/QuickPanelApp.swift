@@ -184,7 +184,7 @@ class AppState: ObservableObject {
 
     // MARK: - Feedback Toast
 
-    private func showTempFeedback(_ text: String) {
+    func showTempFeedback(_ text: String) {
         feedbackText = text
         withAnimation(.easeInOut(duration: 0.15)) { showFeedback = true }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { [weak self] in
