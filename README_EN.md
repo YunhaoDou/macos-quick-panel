@@ -1,17 +1,16 @@
 <p align="center">
-  <img src="QuickPanel.icns" width="128" alt="QuickPanel Logo" />
+  <img src="QuickPanel.icns" width="120" alt="QuickPanel Logo" />
 </p>
 
 <h1 align="center">QuickPanel</h1>
 
 <p align="center">
   <strong>macOS Menu Bar Quick Control Panel</strong><br />
-  System Controls · Productivity Tools · One-Click Scenes
+  <code>⌥⌘P</code> to open · Features Apple Control Center doesn't have
 </p>
 
 <p align="center">
-  <a href="README.md">🇨🇳 中文</a> ·
-  <a href="README_EN.md">🇬🇧 English</a>
+  <a href="README.md">🇨🇳 中文</a> · <a href="README_EN.md">🇬🇧 English</a>
 </p>
 
 <p align="center">
@@ -23,105 +22,118 @@
 
 <p align="center">
   <a href="#-features">Features</a> ·
+  <a href="#-dual-entry">Dual Entry</a> ·
   <a href="#-install">Install</a> ·
-  <a href="#-usage">Usage</a> ·
-  <a href="#-architecture">Architecture</a> ·
-  <a href="#-roadmap">Roadmap</a>
+  <a href="#-vs-control-center">vs Control Center</a>
 </p>
 
 ---
 
-**QuickPanel** is a lightweight, open-source, free macOS menu bar toolbox. Click the menu bar icon to quickly control system settings, perform common actions, or switch between work/life scenes with one click.
+**QuickPanel** is a lightweight macOS toolbox. It provides features **Apple's Control Center doesn't have**, accessible via both the menu bar icon and the global hotkey `⌥⌘P`.
 
-> 🆓 Free · 🧩 Open Source (MIT) · ⚡ 800KB · 🔒 100% Local (no network)
-
-> 🇨🇳 中文版: [README.md](README.md)
+> 🆓 Free · 🧩 Open Source (MIT) · ⚡ ~800KB · 🔒 100% Local
 
 ---
 
-## 📸 Preview
+## 🎯 Features
 
-```
-┌─────────────────────────────────┐
-│ 🔍 Search files / Apps…  ⌥⌘Q   │
-├─────────────────────────────────┤
-│ 🎛️ System Controls               │
-│   🌙 Dark Mode              ○ ON │
-│   🔊 Output          AirPods ▾   │
-│   🔇 Do Not Disturb         ○    │
-│   🔒 Lock Screen             ›   │
-├─────────────────────────────────┤
-│ Ａ Input & Desktop               │
-│   Ａ IME (中文/English)       ›   │
-│   🖥️ Desktop Icons           ○   │
-├─────────────────────────────────┤
-│ ⚡ Quick Actions                  │
-│   🗑️ Empty Trash              ›   │
-│   📝 Quick Note → Obsidian    ›   │
-│   ⏰ Pomodoro Timer           ›   │
-│   📋 Clipboard History        ›   │
-├─────────────────────────────────┤
-│ 🌐 Network                       │
-│   📶 Current Wi-Fi ▼             │
-├─────────────────────────────────┤
-│ 🏃 One-Click Scenes              │
-│ [💼 Work] [🌙 Night] [🎤 Present] [🚪 Leave] │
-├─────────────────────────────────┤
-│ ⌨️ Global Shortcut   ⌥⌘Q        │
-│  Preferences               Quit │
-└─────────────────────────────────┘
-```
+**Only what Control Center can't do:**
+
+| Category | Feature | Description |
+|----------|---------|-------------|
+| 🖼️ | **Screenshot** | Region / Window / Fullscreen / Clipboard |
+| 🪟 | **Window Layout** | Left / Right / Fullscreen / Center |
+| ☕ | **Caffeinate** | Keep Mac awake toggle |
+| 👁️ | **Hidden Files** | Show/hide hidden Finder files |
+| 🔒 | **Lock Screen** | One-click lock via ScreenSaverEngine |
+| 🗑️ | **Empty Trash** | Quick cleanup |
+| ⌨️ | **IME Toggle** | Switch between Sogou Pinyin / ABC |
+| 🖥️ | **Desktop Icons** | Hide/show desktop icons |
+| 📝 | **Quick Note** | Save to Obsidian inbox |
+| ⏰ | **Pomodoro** | 25min focus / 5min break timer |
+| 📋 | **Clipboard History** | Auto-captures last 20 items, click to paste |
+| 🧹 | **Clear Clipboard** | One-click clear + history |
+| 🏃 | **One-Click Scenes** | Work / Night / Presentation / Leaving |
+| 📦 | **In-App Updates** | Check & install from GitHub Releases |
 
 ---
 
-## 🚀 Features
+## 🏗️ Dual Entry
 
-### 🎛️ System Controls
-| Feature | Description |
-|---------|-------------|
-| **Dark Mode** | Toggle Light/Dark appearance |
-| **Audio Output** | Switch speakers/headphones/AirPods |
-| **Do Not Disturb** | Toggle Focus mode |
-| **Lock Screen** | Quick lock via CGSession |
+QuickPanel opens two ways:
 
-### Ａ Input & Desktop
-| Feature | Description |
-|---------|-------------|
-| **IME Toggle** | Switch between Sogou Pinyin / ABC |
-| **Desktop Icons** | Hide/show desktop icons (useful for presentations) |
+```
+┌─────────────────────────────────────┐
+│ Menu Bar Icon                        │
+│ Click ▦ in menu bar                  │
+│ Dropdown panel, quick access         │
+├─────────────────────────────────────┤
+│ ⌥⌘P Global Hotkey                    │
+│ Floating panel window                │
+│ Draggable, remembers position        │
+│ Great for pomodoro & long tasks      │
+└─────────────────────────────────────┘
+```
 
-### ⚡ Quick Actions
-| Feature | Description |
-|---------|-------------|
-| **Empty Trash** | One-click `~/.Trash/` cleanup |
-| **Quick Note** | Save notes to Obsidian inbox |
-| **Pomodoro** | 25min focus + 5min break timer |
-| **Clipboard History** | Last 20 clipboard items, click to paste |
+> `⌥⌘P` doesn't conflict with any macOS system shortcuts or common app shortcuts.
 
-### 🌐 Network
-| Feature | Description |
-|---------|-------------|
-| **Wi-Fi Scanner** | Scan nearby networks with signal bars |
-| **Wi-Fi Switch** | Click to connect, current network labeled |
+---
 
-### 🏃 One-Click Scenes
-| Scene | Actions |
-|-------|---------|
-| 💼 **Work** | Open VSCode + Chrome + Terminal → Light mode |
-| 🌙 **Night** | Dark mode → Volume 20% → Close Mail/Messages |
-| 🎤 **Presentation** | DND → Hide desktop icons → Dark mode |
-| 🚪 **Leaving** | Close apps → Empty trash → Lock screen |
+## 📸 Panel Preview
 
-All scene actions are customizable in `Sources/QuickPanel/Features/Macros.swift`.
+### Menu Bar Mode
+```
+┌────────────────────────────────────┐
+│ 🔍 QuickPanel                      │
+├────────────────────────────────────┤
+│ Ａ Input & Desktop                  │
+│   Ａ IME (中文/English)          ›  │
+│   🖥️ Desktop Icons             ○   │
+├────────────────────────────────────┤
+│ ⚡ Quick Actions                     │
+│   🔒 Lock Screen                ›  │
+│   🗑️ Empty Trash               ›   │
+│   📝 Note → Obsidian           ›   │
+│   ⏰ Pomodoro                  ›   │
+│   📋 Clipboard (3)  🧹     ▼      │
+├────────────────────────────────────┤
+│ 🖼️ Screenshot                       │
+│ [Region] [Window] [Full] [Clipbrd]  │
+├────────────────────────────────────┤
+│ 🪟 Window Layout                     │
+│ [◧Left] [◨Right] [⛶Full] [⬡Center] │
+├────────────────────────────────────┤
+│ 🛠️ System Tools                     │
+│ ☕ Caffeinate                   ○   │
+│ 👁️ Hidden Files                ○   │
+├────────────────────────────────────┤
+│ 🏃 One-Click Scenes                 │
+│ [💼Work] [🌙Night] [🎤Present] [🚪Leave]│
+├────────────────────────────────────┤
+│ ⚙️ Preferences    ⌥⌘P         Quit │
+└────────────────────────────────────┘
+```
 
-### ⌨️ Shortcuts
-| Shortcut | Action |
-|----------|--------|
-| `⌥⌘Q` | Global QuickPanel toggle (WIP) |
+### Floating Panel Mode (⌥⌘P)
+Same content as menu bar, but as a floating window:
+- Drag anywhere, remembers position
+- Shows `⌥⌘P` / Hide in footer
+- Header with QuickPanel title + feedback toast
 
 ---
 
 ## 📦 Install
+
+### Option 1: Download Release (recommended)
+
+```bash
+https://github.com/YunhaoDou/macos-quick-panel/releases
+
+# Open .dmg → drag to Applications
+# First time: right-click → Open
+```
+
+### Option 2: Build from source
 
 ```bash
 git clone https://github.com/YunhaoDou/macos-quick-panel.git
@@ -131,12 +143,45 @@ open dist/QuickPanel.app
 ```
 
 ### Launch on Login
+
 `System Settings → General → Login Items → + → QuickPanel.app`
 
-### Permissions
-When first using certain features, macOS may prompt for:
-- **Accessibility** — required for audio switching, lock screen, DND
-  - Grant at `System Settings → Privacy & Security → Accessibility`
+---
+
+## ⚙️ Preferences
+
+Click ⚙️ in the footer:
+
+| Setting | Description |
+|---------|-------------|
+| **Obsidian Vault** | Set note save directory (browse supported) |
+| **Launch at Login** | Auto-start on login |
+| **Global Hotkey** | Current: `⌥⌘P` |
+| **Check Updates** | Auto-detect latest GitHub Release |
+
+---
+
+## ✅ vs Control Center
+
+| Feature | QuickPanel | Control Center |
+|---------|-----------|----------------|
+| Screenshot (region/window/full) | ✅ | ❌ |
+| Window layout (left/right/full/center) | ✅ | ❌ |
+| Caffeinate (keep awake) | ✅ | ❌ |
+| Finder hidden files toggle | ✅ | ❌ |
+| Lock screen | ✅ | ❌ |
+| Empty trash | ✅ | ❌ |
+| IME toggle (CN/EN) | ✅ | ❌ |
+| Hide desktop icons | ✅ | ❌ |
+| Quick note (Obsidian) | ✅ | ❌ |
+| Pomodoro timer | ✅ | ❌ |
+| Clipboard history | ✅ | ❌ |
+| One-click scenes (4 modes) | ✅ | ❌ |
+| ⌥⌘P hotkey to open | ✅ | ❌ |
+| In-app auto updater | ✅ | ❌ |
+| Dark mode | ❌ — provided by Control Center | ✅ |
+| Audio output | ❌ — provided by Control Center | ✅ |
+| Do Not Disturb | ❌ — provided by Control Center | ✅ |
 
 ---
 
@@ -144,73 +189,73 @@ When first using certain features, macOS may prompt for:
 
 ```
 macos-quick-panel/
-├── Package.swift                 # SwiftPM build config
+├── Package.swift                 # SwiftPM config
 ├── Info.plist                    # LSUIElement = true
-├── QuickPanel.icns               # App icon
-├── design/                       # SVG design sources
-│   └── icon_v2.svg
+├── QuickPanel.icns               # App icon (1.4MB)
+├── design/icon_v2.svg            # Icon design source
 ├── scripts/
-│   └── build.sh                  # Build + .app packaging
-└── Sources/
-    └── QuickPanel/
-        ├── QuickPanelApp.swift   # @main entry + AppState
-        ├── MenuBarContent.swift  # Panel UI + frosted glass
-        ├── Helpers/
-        │   ├── SystemCommands.swift
-        │   ├── AudioManager.swift     # CoreAudio
-        │   ├── DoNotDisturb.swift
-        │   ├── ClipboardManager.swift
-        │   ├── WiFiManager.swift      # CoreWLAN
-        │   ├── InputMethodManager.swift # TIS
-        │   ├── DesktopIconsManager.swift
-        │   └── HotkeyManager.swift    # Carbon hotkey
-        └── Features/
-            ├── PomodoroTimer.swift
-            ├── PomodoroView.swift
-            ├── QuickNote.swift
-            ├── ObsidianManager.swift
-            ├── Macros.swift
-            ├── ClipboardHistoryView.swift
-            └── WiFiListView.swift
+│   ├── build.sh                  # Build + .app packaging
+│   └── create-dmg.sh             # DMG installer creation
+└── Sources/QuickPanel/
+    ├── QuickPanelApp.swift       # @main + AppState
+    ├── MenuBarContent.swift      # Menu bar panel UI
+    ├── PanelManager.swift        # Floating panel (NSPanel)
+    ├── Helpers/
+    │   ├── SystemCommands.swift
+    │   ├── ClipboardManager.swift
+    │   ├── InputMethodManager.swift   # TIS
+    │   ├── DesktopIconsManager.swift
+    │   ├── ScreenshotManager.swift    # screencapture
+    │   ├── WindowManager.swift        # AppleScript
+    │   ├── CaffeinateManager.swift    # caffeinate
+    │   ├── FinderHiddenFilesManager.swift
+    │   ├── HotkeyManager.swift        # Carbon
+    │   ├── AppUpdater.swift           # In-app updates
+    │   └── SettingsStore.swift        # UserDefaults
+    └── Features/
+        ├── PomodoroView.swift
+        ├── QuickNote.swift
+        ├── ObsidianManager.swift
+        ├── Macros.swift
+        ├── ClipboardHistoryView.swift
+        └── PreferencesView.swift
 ```
 
 ### Tech Stack
+
 | Layer | Technology |
 |-------|-----------|
 | **Language** | Swift 5.9+ |
-| **UI** | SwiftUI MenuBarExtra + NSVisualEffectView |
-| **Audio** | CoreAudio API |
-| **Wi-Fi** | CoreWLAN framework |
+| **UI** | SwiftUI MenuBarExtra + NSPanel + NSVisualEffectView |
+| **Screenshot** | `screencapture` CLI |
+| **Window mgmt** | AppleScript (System Events) |
 | **IME** | Carbon TIS API |
 | **Hotkey** | Carbon Event HotKey |
 | **System** | Process (zsh) + AppleScript |
 | **Minimum** | macOS 13.0 (Ventura) |
-| **Build** | Swift Package Manager |
+| **Build** | Swift Package Manager · ad-hoc signed |
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] System controls (dark/audio/DND/lock)
-- [x] Quick actions (trash/note/pomodoro/clipboard)
-- [x] One-click scenes (work/night/presentation/leaving)
-- [x] Custom app icon
-- [x] Wi-Fi scan & switch
-- [x] IME toggle (CN/EN)
-- [x] Desktop icons hide/show
-- [x] Global hotkey
-- [x] Frosted glass UI
-- [ ] Preferences window
-- [ ] Night Shift toggle
+- [x] Quick actions (lock/trash/note/pomodoro/clipboard)
+- [x] IME toggle + desktop icons
+- [x] Screenshot + window layout
+- [x] Caffeinate + hidden files
+- [x] One-click scenes (4 modes)
+- [x] Frosted glass UI (NSVisualEffectView)
+- [x] Feedback toast
+- [x] Global hotkey ⌥⌘P
+- [x] Dual entry (menu bar + floating panel)
+- [x] Preferences + in-app updater
 - [ ] Custom scenes (user editable)
 - [ ] Homebrew Cask install
-- [ ] GitHub Releases + CI
+- [ ] GitHub Actions CI
 
 ---
 
 ## 🤝 Contributing
-
-Issues, PRs, and Feature Requests are welcome!
 
 ```bash
 git clone https://github.com/YunhaoDou/macos-quick-panel.git
@@ -219,14 +264,14 @@ bash scripts/build.sh
 open dist/QuickPanel.app
 ```
 
+Issues, PRs, and Feature Requests are welcome!
+
 ---
 
 ## 📄 License
 
 [MIT License](LICENSE) © 2025 YunhaoDou
 
----
-
 <p align="center">
-  <a href="README.md">🇨🇳 中文版</a>
+  <a href="README.md">🇨🇳 中文</a>
 </p>
