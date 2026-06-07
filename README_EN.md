@@ -25,7 +25,6 @@
   <a href="#-features">Features</a> ·
   <a href="#-install">Install</a> ·
   <a href="#-usage">Usage</a> ·
-  <a href="#-comparison">Comparison</a> ·
   <a href="#-architecture">Architecture</a> ·
   <a href="#-roadmap">Roadmap</a>
 </p>
@@ -138,31 +137,6 @@ open dist/QuickPanel.app
 When first using certain features, macOS may prompt for:
 - **Accessibility** — required for audio switching, lock screen, DND
   - Grant at `System Settings → Privacy & Security → Accessibility`
-
----
-
-## 📊 Comparison
-
-| Dimension | QuickPanel | One Switch | Raycast | Alfred Powerpack | Bartender |
-|-----------|-----------|-----------|---------|-----------------|-----------|
-| **Price** | 🆓 Free | ¥38 | Free / ¥93 Pro | ¥299 | ¥78 |
-| **Open Source** | ✅ MIT | ❌ | ❌ | ❌ | ❌ |
-| **Menu Bar** | ✅ Always | ✅ | ❌ Launcher | ❌ Launcher | ✅ Icon mgmt |
-| **Dark Mode** | ✅ One-click | ✅ One-click | Needs plugin | Needs workflow | ❌ |
-| **Audio Switch** | ✅ Dropdown | ❌ | Needs plugin | Needs workflow | ❌ |
-| **Scene Macros** | ✅ 4 built-in | ❌ | ❌ | ✅ Customizable | ❌ |
-| **Pomodoro** | ✅ Built-in | ❌ | Needs plugin | ❌ | ❌ |
-| **Wi-Fi** | ✅ Scan+switch | ❌ | ❌ | ❌ | ❌ |
-| **IME Toggle** | ✅ CN/EN | ❌ | ❌ | ❌ | ❌ |
-| **Clipboard** | ✅ 20 items | ❌ | ✅ Powerful | ✅ Powerful | ❌ |
-| **Quick Note** | ✅ Obsidian | ❌ | ✅ Plugin | ✅ Snippet | ❌ |
-| **Size** | ~800KB | ~5MB | ~50MB | ~30MB | ~10MB |
-
-### vs One Switch
-The closest competitor. QuickPanel is free & open-source, adding Pomodoro/Clipboard/Wi-Fi/IME/Scene Macros. One Switch has hide desktop icons, Night Shift, screensaver — coming to QuickPanel soon.
-
-### vs Raycast
-**They complement each other.** Raycast needs a keyboard shortcut (good for keyboard power users). QuickPanel lives in the menu bar (good for mouse/trackpad users). QuickPanel's scenes and pomodoro work out of the box — Raycast needs plugins.
 
 ---
 
