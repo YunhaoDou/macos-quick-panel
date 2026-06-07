@@ -83,17 +83,16 @@ class AppState: ObservableObject {
     // MARK: - DND
 
     private func checkDNDState() {
-        // Attempt to read DND state via AppleScript
-        if let result = try? shell("""
-            osascript -e 'tell application "System Events" to tell expose preferences to get dontDisturb' 2>/dev/null || echo "false"
-            """) {
-            isDNDEnabled = result.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "true"
-        }
+        isDNDEnabled = DoNotDisturb.isEnabled()
     }
 
     func toggleDND() {
         isDNDEnabled.toggle()
         DoNotDisturb.toggle(isDNDEnabled)
+        // Refresh actual state after toggling
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.isDNDEnabled = DoNotDisturb.isEnabled()
+        }
         showTempFeedback(isDNDEnabled ? "勿扰已开启" : "勿扰已关闭")
     }
 

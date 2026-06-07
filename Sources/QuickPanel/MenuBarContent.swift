@@ -207,11 +207,24 @@ struct MenuBarContentView: View {
     }
 
     private var dndRow: some View {
-        ToggleRow(icon: "moon.zzz.fill", iconColor: .indigo, title: "勿扰模式",
-                  toggle: Binding(
-                    get: { state.isDNDEnabled },
-                    set: { _ in state.toggleDND() }
-                  ))
+        HStack(spacing: 10) {
+            Image(systemName: "moon.zzz.fill")
+                .foregroundColor(.indigo)
+                .font(.system(size: 12))
+                .frame(width: 18)
+            Text("勿扰模式")
+                .font(.system(size: 12))
+            Spacer()
+            Toggle("", isOn: Binding(
+                get: { state.isDNDEnabled },
+                set: { _ in state.toggleDND() }
+            ))
+            .toggleStyle(.switch)
+            .scaleEffect(0.8)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+        .help("推荐安装 do-not-disturb: brew install do-not-disturb")
     }
 
     private var lockRow: some View {
