@@ -1,4 +1,5 @@
 import SwiftUI
+import Carbon
 
 @main
 struct QuickPanelApp: App {
@@ -31,7 +32,7 @@ class AppState: ObservableObject {
     @Published var hiddenFilesShown: Bool = false
 
     // ── Shortcuts ──
-    @Published var preferredShortcut: String = "⌥⌘Q"
+    @Published var preferredShortcut: String = "⌥⌘P"
 
     // ── Feedback ──
     @Published var feedbackText: String = ""
@@ -50,6 +51,9 @@ class AppState: ObservableObject {
         self.desktopIconsHidden = DesktopIconsManager.isHidden
         self.hiddenFilesShown = FinderHiddenFilesManager.isShowingHidden
         self.clipboardHistory = ClipboardManager.shared.recentItems
+
+        // Setup main panel
+        PanelManager.shared.setup(with: self)
 
         // Start clipboard polling (every 1.5s)
         startClipboardPolling()
@@ -174,10 +178,9 @@ class AppState: ObservableObject {
     // MARK: - Hotkey
 
     private func setupHotkey() {
-        HotkeyManager.shared.register { [weak self] in
+        HotkeyManager.shared.register(combo: (35, UInt32(cmdKey + optionKey))) { [weak self] in
             DispatchQueue.main.async {
-                self?.showTempFeedback("⌥⌘Q QuickPanel")
-                NSApp.activate(ignoringOtherApps: true)
+                PanelManager.shared.toggle()
             }
         }
     }
