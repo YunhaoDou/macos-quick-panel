@@ -312,10 +312,33 @@ struct MenuBarContentView: View {
 
     private var footerRow: some View {
         HStack {
-            Button("偏好设置") { }
-                .buttonStyle(.plain)
-                .font(.caption)
-                .foregroundColor(.secondary)
+            Button(action: { state.updater.checkForUpdates() }) {
+                if state.updater.isChecking {
+                    HStack(spacing: 4) {
+                        ProgressView()
+                            .scaleEffect(0.5)
+                            .frame(width: 12, height: 12)
+                        Text("检查中")
+                            .font(.caption)
+                    }
+                } else if state.updater.updateAvailable {
+                    Text("更新 \(state.updater.latestVersion)")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                } else {
+                    Text("检查更新")
+                        .font(.caption)
+                }
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+
+            if state.updater.isDownloading {
+                Text("\(Int(state.updater.downloadProgress * 100))%")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+
             Spacer()
             Button("退出") {
                 NSApplication.shared.terminate(nil)

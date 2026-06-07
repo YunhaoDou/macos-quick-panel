@@ -41,6 +41,9 @@ class AppState: ObservableObject {
     @Published var feedbackText: String = ""
     @Published var showFeedback: Bool = false
 
+    // ── Updater ──
+    @Published var updater = AppUpdater.shared
+
     // ── Internal ──
     private var clipboardTimer: Timer?
 
