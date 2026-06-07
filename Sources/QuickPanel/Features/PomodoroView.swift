@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PomodoroView: View {
-    @StateObject private var timer = PomodoroTimer()
+    @ObservedObject var timer: PomodoroTimer
 
     var body: some View {
         VStack(spacing: 8) {
@@ -18,25 +18,16 @@ struct PomodoroView: View {
                 HStack(spacing: 4) {
                     if timer.state.isRunning {
                         Button(action: { timer.stop() }) {
-                            Image(systemName: "pause.fill")
-                                .font(.caption)
-                        }
-                        .buttonStyle(.plain)
+                            Image(systemName: "pause.fill").font(.caption)
+                        }.buttonStyle(.plain)
                     } else {
-                        Button(action: {
-                            timer.start { NSSound.beep() }
-                        }) {
-                            Image(systemName: "play.fill")
-                                .font(.caption)
-                        }
-                        .buttonStyle(.plain)
+                        Button(action: { timer.start { NSSound.beep() } }) {
+                            Image(systemName: "play.fill").font(.caption)
+                        }.buttonStyle(.plain)
                     }
                     Button(action: { timer.reset() }) {
-                        Image(systemName: "arrow.counterclockwise")
-                            .font(.caption)
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundColor(.secondary)
+                        Image(systemName: "arrow.counterclockwise").font(.caption)
+                    }.buttonStyle(.plain).foregroundColor(.secondary)
                 }
             }
             .padding(.horizontal, 12)
@@ -46,8 +37,7 @@ struct PomodoroView: View {
                 HStack {
                     Spacer()
                     Text("已完成 \(timer.state.cycles) 个番茄")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
+                        .font(.caption2).foregroundColor(.secondary)
                 }
                 .padding(.horizontal, 12)
                 .padding(.bottom, 4)

@@ -14,22 +14,43 @@ enum WindowLayout {
 /// Screenshot tools: region, window, fullscreen
 enum ScreenshotManager {
     static func captureRegion() {
-        // Interactive region selection
-        try? shell("screencapture -i ~/Desktop/截图\\ $(date +'%Y-%m-%d\\ %H.%M.%S').png")
+        let path = "~/Desktop/截图_$(date +%Y-%m-%d_%H.%M.%S).png"
+        try? shell("screencapture -i '\(path)'")
     }
 
     static func captureWindow() {
-        // Click a window to capture it
-        try? shell("screencapture -iw ~/Desktop/截图\\ $(date +'%Y-%m-%d\\ %H.%M.%S').png")
+        let path = "~/Desktop/截图_$(date +%Y-%m-%d_%H.%M.%S).png"
+        try? shell("screencapture -iw '\(path)'")
     }
 
     static func captureFullscreen() {
-        // Capture entire screen(s)
-        try? shell("screencapture -T 0 ~/Desktop/截图\\ $(date +'%Y-%m-%d\\ %H.%M.%S').png")
+        let path = "~/Desktop/截图_$(date +%Y-%m-%d_%H.%M.%S).png"
+        try? shell("screencapture '\(path)'")
     }
 
     static func captureToClipboard() {
-        // Capture to clipboard instead of file
         try? shell("screencapture -c")
+    }
+}
+
+/// Window layout management via AppleScript
+enum WindowManager {
+    private static let script: String = """
+    tell application "System Events"
+        set frontApp to name of first application process whose frontmost is true
+    end tell
+    tell application frontApp
+        %@
+    end tell
+    """
+
+    static func tileLeft()   { run("set bounds of window 1 to {0, 40, 720, 1080}") }
+    static func tileRight()  { run("set bounds of window 1 to {720, 40, 1440, 1080}") }
+    static func maximize()   { run("set bounds of window 1 to {0, 40, 1440, 1080}") }
+    static func center()     { run("set bounds of window 1 to {144, 148, 1296, 972}") }
+
+    private static func run(_ action: String) {
+        let full = script.replacingOccurrences(of: "%@", with: action)
+        try? shell("osascript -e '\(full)'")
     }
 }

@@ -132,7 +132,7 @@ struct MainPanelView: View {
 
                     if showPomodoro {
                         Divider().opacity(0.3).padding(.vertical, 4)
-                        PomodoroView()
+                        PomodoroView(timer: state.pomodoroTimer)
                             .padding(.horizontal, 8)
                     }
                     if showClipboard {

@@ -1,4 +1,5 @@
 import SwiftUI
+import ServiceManagement
 
 /// Settings storage via UserDefaults
 final class SettingsStore: ObservableObject {
@@ -17,66 +18,72 @@ final class SettingsStore: ObservableObject {
     @Published var appVersion: String = "1.1.1"
 
     private init() {
-        // Load persisted settings
-        let defaultVault = "\(NSHomeDirectory())/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+        let defaultVault = FileManager.default.fileExists(atPath: "\(NSHomeDirectory())/Library/Mobile Documents/iCloud~md~obsidian/Documents")
+            ? "\(NSHomeDirectory())/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+            : "\(NSHomeDirectory())/Documents"
+
         obsidianVaultPath = defaults.string(forKey: "obsidian_vault_path") ?? defaultVault
         launchAtLogin = defaults.bool(forKey: "launch_at_login")
-    }
 
-    private func applyLaunchAtLogin() {
-        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.quickpanel.app")
-                ?? Bundle.main.bundleURL as URL? else { return }
-
-        if launchAtLogin {
-            try? FileManager.default.setAttributes(
-                [FileAttributeKey(rawValue: "NSURLIsUbiquitousItemKey"): false],
-                ofItemAtPath: appURL.path
-            )
-            // Use LSSharedFileList for login items
-            if let loginItemsRef = LSSharedFileListCreate(
-                nil,
-                kLSSharedFileListSessionLoginItems.takeRetainedValue(),
-                nil
-            )?.takeRetainedValue() {
-                let iconRef = NSWorkspace.shared.icon(forFile: appURL.path)
-                let item = LSSharedFileListInsertItemURL(
-                    loginItemsRef,
-                    kLSSharedFileListItemLast.takeRetainedValue(),
-                    nil,
-                    nil,
-                    appURL as CFURL,
-                    nil,
-                    nil
-                )
-                if item != nil {
-                    // Keep a reference to the icon ref so it's not deallocated
-                    _ = iconRef
-                }
-            }
-        } else {
-            // Remove from login items
-            if let loginItemsRef = LSSharedFileListCreate(
-                nil,
-                kLSSharedFileListSessionLoginItems.takeRetainedValue(),
-                nil
-            )?.takeRetainedValue() {
-                let items = LSSharedFileListCopySnapshot(loginItemsRef, nil)?.takeRetainedValue() as! [LSSharedFileListItem]
-                for item in items {
-                    var outURL: Unmanaged<CFURL>?
-                    if LSSharedFileListItemResolve(item, 0, &outURL, nil) == noErr,
-                       let resolved = outURL?.takeRetainedValue() as URL?,
-                       resolved.path == appURL.path {
-                        LSSharedFileListItemRemove(loginItemsRef, item)
-                    }
-                }
-            }
+        // Sync actual login state on init
+        if #available(macOS 13.0, *) {
+            launchAtLogin = SMAppService.mainApp.status == .enabled
         }
     }
 
-    /// Open system Login Items settings
-    func openLoginItemSettings() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.LoginItems-Settings.extension") {
-            NSWorkspace.shared.open(url)
+    private func applyLaunchAtLogin() {
+        if #available(macOS 13.0, *) {
+            do {
+                if launchAtLogin {
+                    try SMAppService.mainApp.register()
+                } else {
+                    try SMAppService.mainApp.unregister()
+                }
+            } catch {
+                // Fallback to old method
+                legacyToggleLoginItem(enable: launchAtLogin)
+            }
+        } else {
+            legacyToggleLoginItem(enable: launchAtLogin)
+        }
+        defaults.set(launchAtLogin, forKey: "launch_at_login")
+    }
+
+    private func legacyToggleLoginItem(enable: Bool) {
+        let appURL = Bundle.main.bundleURL
+
+        if enable {
+            guard let loginItemsRef = LSSharedFileListCreate(
+                nil,
+                kLSSharedFileListSessionLoginItems.takeRetainedValue(),
+                nil
+            )?.takeRetainedValue() else { return }
+
+            LSSharedFileListInsertItemURL(
+                loginItemsRef,
+                kLSSharedFileListItemLast.takeRetainedValue(),
+                nil,
+                nil,
+                appURL as CFURL,
+                nil,
+                nil
+            )
+        } else {
+            guard let loginItemsRef = LSSharedFileListCreate(
+                nil,
+                kLSSharedFileListSessionLoginItems.takeRetainedValue(),
+                nil
+            )?.takeRetainedValue() else { return }
+
+            let items = LSSharedFileListCopySnapshot(loginItemsRef, nil)?.takeRetainedValue() as! [LSSharedFileListItem]
+            for item in items {
+                var outURL: Unmanaged<CFURL>?
+                if LSSharedFileListItemResolve(item, 0, &outURL, nil) == noErr,
+                   let resolved = outURL?.takeRetainedValue() as URL?,
+                   resolved.path == appURL.path {
+                    LSSharedFileListItemRemove(loginItemsRef, item)
+                }
+            }
         }
     }
 }

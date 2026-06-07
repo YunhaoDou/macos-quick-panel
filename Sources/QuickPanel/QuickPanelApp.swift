@@ -41,6 +41,9 @@ class AppState: ObservableObject {
     // ── Updater ──
     @Published var updater = AppUpdater.shared
 
+    // ── Pomodoro (persistent across views) ──
+    @Published var pomodoroTimer = PomodoroTimer()
+
     // ── Internal ──
     private var clipboardTimer: Timer?
 

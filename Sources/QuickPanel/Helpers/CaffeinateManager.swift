@@ -1,5 +1,6 @@
 import Foundation
 import AppKit
+import ServiceManagement
 
 /// Prevent Mac from sleeping (Caffeinate)
 final class CaffeinateManager: ObservableObject {
@@ -7,27 +8,24 @@ final class CaffeinateManager: ObservableObject {
 
     @Published var isActive = false
     private var process: Process?
+    private let processLabel = "com.quickpanel.caffeinate"
 
     private init() {
-        // Check if caffeinate is already running from a previous session
-        if let output = try? shell("pgrep -x caffeinate 2>/dev/null || echo '0'") {
+        // Check if our caffeinate process is running
+        if let output = try? shell("pgrep -fl caffeinate 2>/dev/null | grep '\(processLabel)' || echo '0'") {
             isActive = output.trimmingCharacters(in: .whitespacesAndNewlines) != "0"
         }
     }
 
     func toggle() {
-        if isActive {
-            stop()
-        } else {
-            start()
-        }
+        if isActive { stop() } else { start() }
     }
 
     func start() {
         guard !isActive else { return }
         process = Process()
         process?.executableURL = URL(fileURLWithPath: "/usr/bin/caffeinate")
-        process?.arguments = ["-dimsu"]
+        process?.arguments = ["-dimsu", "-w", "\(ProcessInfo.processInfo.processIdentifier)"]
         try? process?.run()
         isActive = true
     }
@@ -35,8 +33,7 @@ final class CaffeinateManager: ObservableObject {
     func stop() {
         process?.terminate()
         process = nil
-        // Also kill any remaining caffeinate processes we started
-        try? shell("killall caffeinate 2>/dev/null")
+        try? shell("pgrep -fl caffeinate 2>/dev/null | grep '\(processLabel)' | awk '{print $1}' | xargs kill 2>/dev/null")
         isActive = false
     }
 }
