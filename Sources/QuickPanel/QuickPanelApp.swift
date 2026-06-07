@@ -15,16 +15,6 @@ struct QuickPanelApp: App {
 
 @MainActor
 class AppState: ObservableObject {
-    // ── System ──
-    @Published var isDarkMode: Bool {
-        didSet { applyDarkMode() }
-    }
-    @Published var isDNDEnabled: Bool = false
-
-    // ── Audio ──
-    @Published var audioDevices: [AudioDevice] = []
-    @Published var selectedAudioDevice: String = ""
-
     // ── Clipboard ──
     @Published var clipboardHistory: [String] = []
 
@@ -50,17 +40,9 @@ class AppState: ObservableObject {
     var menuIcon: String { "square.grid.2x2" }
 
     init() {
-        // Read initial states
-        let currentMode = try? SystemCommands.currentInterfaceStyle()
-        self.isDarkMode = (currentMode == "Dark")
-        self.audioDevices = AudioManager.shared.listDevices()
-        self.selectedAudioDevice = AudioManager.shared.currentDeviceName()
         self.inputMethodLabel = InputMethodManager.currentShortName()
         self.desktopIconsHidden = DesktopIconsManager.isHidden
         self.clipboardHistory = ClipboardManager.shared.recentItems
-
-        // Read DND state (macOS 14+)
-        checkDNDState()
 
         // Start clipboard polling (every 1.5s)
         startClipboardPolling()
@@ -80,29 +62,6 @@ class AppState: ObservableObject {
         }
     }
 
-    // MARK: - DND
-
-    private func checkDNDState() {
-        isDNDEnabled = DoNotDisturb.isEnabled()
-    }
-
-    func toggleDND() {
-        isDNDEnabled.toggle()
-        DoNotDisturb.toggle(isDNDEnabled)
-        // Refresh actual state after toggling
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.isDNDEnabled = DoNotDisturb.isEnabled()
-        }
-        showTempFeedback(isDNDEnabled ? "勿扰已开启" : "勿扰已关闭")
-    }
-
-    // MARK: - Dark Mode
-
-    private func applyDarkMode() {
-        SystemCommands.toggleDarkMode(isDarkMode)
-        showTempFeedback(isDarkMode ? "深色模式" : "浅色模式")
-    }
-
     // MARK: - Lock
 
     func lockScreen() {
@@ -115,19 +74,6 @@ class AppState: ObservableObject {
     func emptyTrash() {
         SystemCommands.emptyTrash()
         showTempFeedback("废纸篓已清空")
-    }
-
-    // MARK: - Audio
-
-    func refreshAudioDevices() {
-        audioDevices = AudioManager.shared.listDevices()
-        selectedAudioDevice = AudioManager.shared.currentDeviceName()
-    }
-
-    func switchAudio(to deviceName: String) {
-        AudioManager.shared.switchToDevice(named: deviceName)
-        selectedAudioDevice = deviceName
-        showTempFeedback("音频: \(deviceName)")
     }
 
     // MARK: - Input Method
@@ -158,10 +104,8 @@ class AppState: ObservableObject {
     // MARK: - Pomodoro
 
     func pomodoroCompleted() {
-        // Play system notification sound
         NSSound.beep()
         showTempFeedback("🍅 番茄时间到！")
-        // Show a notification
         let notification = NSUserNotification()
         notification.title = "番茄钟"
         notification.informativeText = "专注时间结束，休息一下吧！"
@@ -175,7 +119,6 @@ class AppState: ObservableObject {
         HotkeyManager.shared.register { [weak self] in
             DispatchQueue.main.async {
                 self?.showTempFeedback("⌥⌘Q QuickPanel")
-                // Bring app to front (as much as a MenuBarExtra can)
                 NSApp.activate(ignoringOtherApps: true)
             }
         }

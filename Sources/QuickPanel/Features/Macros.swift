@@ -30,21 +30,10 @@ enum MacroRunner {
         for app in apps {
             try? shell("open -a '\(app)'")
         }
-        // Ensure dark mode is off during day
-        try? shell("defaults write -g AppleInterfaceStyle -string 'Light' 2>/dev/null")
-        DistributedNotificationCenter.default().post(
-            name: NSNotification.Name("AppleInterfaceThemeChangedNotification"),
-            object: nil
-        )
     }
 
     private static func activateNightMode() {
-        // Dark mode + low volume + low brightness
-        try? shell("defaults write -g AppleInterfaceStyle -string 'Dark' 2>/dev/null")
-        DistributedNotificationCenter.default().post(
-            name: NSNotification.Name("AppleInterfaceThemeChangedNotification"),
-            object: nil
-        )
+        // Low volume, close distracting apps
         try? shell("osascript -e 'set volume output volume 20'")
         // Close distracting apps
         try? shell("killall 'Messages' 2>/dev/null")
@@ -52,15 +41,8 @@ enum MacroRunner {
     }
 
     private static func activatePresentationMode() {
-        // Enable DND, hide desktop icons, dark mode
+        // Hide desktop icons
         try? shell("defaults write com.apple.finder CreateDesktop false && killall Finder")
-        try? shell("defaults write -g AppleInterfaceStyle -string 'Dark' 2>/dev/null")
-        DistributedNotificationCenter.default().post(
-            name: NSNotification.Name("AppleInterfaceThemeChangedNotification"),
-            object: nil
-        )
-        // Turn on DND
-        DoNotDisturb.toggle(true)
     }
 
     private static func activateLeavingMode() {

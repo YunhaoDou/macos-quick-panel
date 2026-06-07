@@ -65,15 +65,6 @@ struct MenuBarContentView: View {
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
-                    // 系统控制
-                    sectionHeader("系统控制")
-                    darkModeRow
-                    audioRow
-                    dndRow
-                    lockRow
-
-                    Divider().opacity(0.3).padding(.vertical, 4)
-
                     // 输入法与桌面
                     sectionHeader("输入 & 桌面")
                     inputMethodRow
@@ -83,6 +74,7 @@ struct MenuBarContentView: View {
 
                     // 快捷操作
                     sectionHeader("快捷操作")
+                    lockRow
                     trashRow
                     noteRow
                     pomodoroRow
@@ -163,68 +155,6 @@ struct MenuBarContentView: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 8)
-    }
-
-    private var darkModeRow: some View {
-        ToggleRow(icon: "moon.fill", iconColor: .purple, title: "深色模式",
-                  toggle: $state.isDarkMode)
-    }
-
-    private var audioRow: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "speaker.wave.2.fill")
-                .foregroundColor(.blue)
-                .font(.system(size: 12))
-                .frame(width: 18)
-            Text("输出设备")
-                .font(.system(size: 12))
-            Spacer()
-            if state.audioDevices.isEmpty {
-                Text("未检测到")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } else {
-                Picker("", selection: $state.selectedAudioDevice) {
-                    ForEach(state.audioDevices, id: \.name) { device in
-                        Text(device.name).tag(device.name)
-                    }
-                }
-                .pickerStyle(.menu)
-                .scaleEffect(0.85)
-                .onChange(of: state.selectedAudioDevice) { newValue in
-                    state.switchAudio(to: newValue)
-                }
-            }
-            Button(action: { state.refreshAudioDevices() }) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 10))
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(.secondary)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 6)
-    }
-
-    private var dndRow: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "moon.zzz.fill")
-                .foregroundColor(.indigo)
-                .font(.system(size: 12))
-                .frame(width: 18)
-            Text("勿扰模式")
-                .font(.system(size: 12))
-            Spacer()
-            Toggle("", isOn: Binding(
-                get: { state.isDNDEnabled },
-                set: { _ in state.toggleDND() }
-            ))
-            .toggleStyle(.switch)
-            .scaleEffect(0.8)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 6)
-        .help("推荐安装 do-not-disturb: brew install do-not-disturb")
     }
 
     private var lockRow: some View {

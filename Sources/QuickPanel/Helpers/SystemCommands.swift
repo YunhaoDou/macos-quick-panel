@@ -1,35 +1,10 @@
 import Foundation
 import AppKit
 
-/// System-level commands: dark mode, lock screen, empty trash
+/// System-level commands: lock screen, empty trash
 enum SystemCommands {
-    /// Read current interface style
-    static func currentInterfaceStyle() throws -> String? {
-        let raw = try shell("defaults read -g AppleInterfaceStyle 2>/dev/null || echo 'Light'")
-        return raw.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    /// Toggle dark mode via AppleScript (reliable on macOS 10.14+)
-    static func toggleDarkMode(_ enable: Bool) {
-        let value = enable ? "true" : "false"
-        // Use AppleScript — this is the official API since macOS 10.14 Mojave
-        try? shell("""
-        osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to \(value)'
-        """)
-        // Also write to defaults as fallback
-        let style = enable ? "Dark" : "Light"
-        try? shell("defaults write -g AppleInterfaceStyle -string '\(style)' 2>/dev/null")
-        // Force UI refresh
-        DistributedNotificationCenter.default().post(
-            name: NSNotification.Name("AppleInterfaceThemeChangedNotification"),
-            object: nil
-        )
-    }
-
     static func lockScreen() {
-        // macOS 13+: use ScreenSaverEngine
         try? shell("open -a ScreenSaverEngine")
-        // Fallback: lock via pmset
         try? shell("pmset displaysleepnow")
     }
 
