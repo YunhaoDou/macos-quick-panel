@@ -6,7 +6,7 @@ final class AppUpdater: ObservableObject {
     static let shared = AppUpdater()
 
     private let repo = "YunhaoDou/macos-quick-panel"
-    private let currentVersion = "1.1.0"
+    private let currentVersion = "1.1.1"
     private let appName = "QuickPanel"
 
     @Published var isChecking = false

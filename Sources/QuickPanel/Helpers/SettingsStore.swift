@@ -14,7 +14,7 @@ final class SettingsStore: ObservableObject {
         didSet { applyLaunchAtLogin() }
     }
 
-    @Published var appVersion: String = "1.1.0"
+    @Published var appVersion: String = "1.1.1"
 
     private init() {
         // Load persisted settings

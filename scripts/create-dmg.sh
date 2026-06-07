@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 APP_NAME="QuickPanel"
 APP_PATH="$PROJECT_DIR/dist/$APP_NAME.app"
-DMG_NAME="${APP_NAME}-v1.1.0"
+DMG_NAME="${APP_NAME}-v1.1.1"
 DMG_PATH="$PROJECT_DIR/dist/$DMG_NAME.dmg"
 STAGING_DIR="/tmp/${APP_NAME}_dmg"
 

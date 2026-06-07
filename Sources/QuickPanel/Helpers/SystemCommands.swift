@@ -27,7 +27,10 @@ enum SystemCommands {
     }
 
     static func lockScreen() {
-        try? shell("/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend")
+        // macOS 13+: use ScreenSaverEngine
+        try? shell("open -a ScreenSaverEngine")
+        // Fallback: lock via pmset
+        try? shell("pmset displaysleepnow")
     }
 
     static func emptyTrash() {

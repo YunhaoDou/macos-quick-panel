@@ -70,6 +70,7 @@ enum MacroRunner {
         try? shell("osascript -e 'tell application \"Visual Studio Code\" to quit' 2>/dev/null")
         try? shell("osascript -e 'tell application \"Google Chrome\" to quit' 2>/dev/null")
         // Lock
-        try? shell("/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend")
+        try? shell("open -a ScreenSaverEngine")
+        try? shell("pmset displaysleepnow")
     }
 }
