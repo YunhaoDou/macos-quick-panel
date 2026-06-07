@@ -1,184 +1,344 @@
 import SwiftUI
 
+// MARK: - 毛玻璃背景 wrapper
+struct GlassBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .background(
+                VisualEffectView(
+                    material: .hudWindow,
+                    blendingMode: .behindWindow
+                )
+            )
+    }
+}
+
+// MARK: - AppKit NSVisualEffectView bridge
+struct VisualEffectView: NSViewRepresentable {
+    let material: NSVisualEffectView.Material
+    let blendingMode: NSVisualEffectView.BlendingMode
+
+    func makeNSView(context: Context) -> NSVisualEffectView {
+        let view = NSVisualEffectView()
+        view.material = material
+        view.blendingMode = blendingMode
+        view.state = .active
+        return view
+    }
+
+    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
+        nsView.material = material
+        nsView.blendingMode = blendingMode
+    }
+}
+
+// MARK: - Main Menu View
+
 struct MenuBarContentView: View {
     @EnvironmentObject private var state: AppState
-    @State private var searchText = ""
     @State private var showPomodoro = false
     @State private var showClipboard = false
     @State private var showNoteEditor = false
+    @State private var showWiFiList = false
     @State private var noteContent = ""
 
     var body: some View {
         VStack(spacing: 0) {
-            // ── Search bar ──
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.secondary)
-                TextField("搜索文件 / App…", text: $searchText)
-                    .textFieldStyle(.plain)
-                    .font(.system(size: 13))
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(Color(.textBackgroundColor).opacity(0.3))
+            // ── Search Bar ──
+            searchBar
 
-            Divider()
+            Divider().opacity(0.3)
 
-            ScrollView {
+            ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
-                    // ── System Controls ──
-                    systemSection
+                    // 系统控制
+                    sectionHeader("系统控制")
+                    darkModeRow
+                    audioRow
+                    dndRow
+                    lockRow
 
-                    Divider().padding(.vertical, 4)
+                    Divider().opacity(0.3).padding(.vertical, 4)
 
-                    // ── Quick Actions ──
-                    quickActionsSection
+                    // 输入法与桌面
+                    sectionHeader("输入 & 桌面")
+                    inputMethodRow
+                    desktopIconRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
+                    // 快捷操作
+                    sectionHeader("快捷操作")
+                    trashRow
+                    noteRow
+                    pomodoroRow
+                    clipboardRow
 
                     if showPomodoro {
-                        Divider().padding(.vertical, 4)
-                        pomodoroSection
+                        Divider().opacity(0.3).padding(.vertical, 4)
+                        PomodoroView()
                     }
-
                     if showClipboard {
-                        Divider().padding(.vertical, 4)
-                        clipboardSection
+                        Divider().opacity(0.3).padding(.vertical, 4)
+                        ClipboardHistoryView(items: state.clipboardHistory)
                     }
 
-                    Divider().padding(.vertical, 4)
+                    Divider().opacity(0.3).padding(.vertical, 4)
 
-                    // ── One-Click Macros ──
-                    macroSection
+                    // Wi-Fi
+                    sectionHeader("网络")
+                    wifiRow
+                    if showWiFiList {
+                        WiFiListView()
+                            .environmentObject(state)
+                    }
 
-                    Divider().padding(.vertical, 4)
+                    Divider().opacity(0.3).padding(.vertical, 4)
 
-                    // ── Footer ──
-                    footerSection
+                    // 一键场景
+                    sectionHeader("一键场景")
+                    macroRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
+                    // 快捷键
+                    sectionHeader("快捷键")
+                    shortcutRow
                 }
             }
             .frame(width: 280)
             .frame(maxHeight: 520)
+
+            // ── Footer ──
+            footerRow
         }
+        .modifier(GlassBackground())
         .sheet(isPresented: $showNoteEditor) {
             QuickNoteEditor(content: $noteContent)
+                .modifier(GlassBackground())
         }
     }
 
-    // MARK: - System Section
+    // MARK: - Search Bar
 
-    private var systemSection: some View {
-        VStack(spacing: 0) {
-            SectionHeader(title: "系统控制")
+    private var searchBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(.secondary)
+            Text("搜索文件 / App…")
+                .font(.system(size: 12))
+                .foregroundColor(.secondary)
+            Spacer()
+            Text(state.preferredShortcut)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(.secondary.opacity(0.6))
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(Color.secondary.opacity(0.1))
+                .cornerRadius(4)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+    }
 
-            // Dark Mode
-            ToggleRow(
-                icon: "moon.fill",
-                iconColor: .purple,
-                title: "深色模式",
-                toggle: $state.isDarkMode
-            )
+    // MARK: - System Controls
 
-            // Audio Output
-            AudioDeviceRow(
-                devices: state.audioDevices,
-                selected: $state.selectedAudioDevice,
-                onRefresh: { state.refreshAudioDevices() },
-                onSelect: { state.switchAudio(to: $0) }
-            )
+    private func sectionHeader(_ title: String) -> some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 11, weight: .semibold))
+                .foregroundColor(.secondary)
+                .textCase(.uppercase)
+                .kerning(0.5)
+            Spacer()
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+    }
 
-            // Do Not Disturb
-            ToggleRow(
-                icon: "moon.zzz.fill",
-                iconColor: .indigo,
-                title: "勿扰模式",
-                toggle: Binding(
+    private var darkModeRow: some View {
+        ToggleRow(icon: "moon.fill", iconColor: .purple, title: "深色模式",
+                  toggle: $state.isDarkMode)
+    }
+
+    private var audioRow: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "speaker.wave.2.fill")
+                .foregroundColor(.blue)
+                .font(.system(size: 12))
+                .frame(width: 18)
+            Text("输出设备")
+                .font(.system(size: 12))
+            Spacer()
+            if state.audioDevices.isEmpty {
+                Text("未检测到")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else {
+                Picker("", selection: $state.selectedAudioDevice) {
+                    ForEach(state.audioDevices, id: \.name) { device in
+                        Text(device.name).tag(device.name)
+                    }
+                }
+                .pickerStyle(.menu)
+                .scaleEffect(0.85)
+                .onChange(of: state.selectedAudioDevice) { newValue in
+                    state.switchAudio(to: newValue)
+                }
+            }
+            Button(action: { state.refreshAudioDevices() }) {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 10))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+    }
+
+    private var dndRow: some View {
+        ToggleRow(icon: "moon.zzz.fill", iconColor: .indigo, title: "勿扰模式",
+                  toggle: Binding(
                     get: { state.isDNDEnabled },
                     set: { _ in state.toggleDND() }
-                )
-            )
+                  ))
+    }
 
-            // Lock Screen
-            ActionRow(
-                icon: "lock.fill",
-                iconColor: .orange,
-                title: "锁定屏幕"
-            ) { state.lockScreen() }
+    private var lockRow: some View {
+        ActionRow(icon: "lock.fill", iconColor: .orange, title: "锁定屏幕") {
+            state.lockScreen()
         }
+    }
+
+    // MARK: - Input & Desktop
+
+    private var inputMethodRow: some View {
+        ActionRow(icon: "textformat", iconColor: .teal,
+                  title: "输入法  (\(state.inputMethodLabel))") {
+            state.toggleInputMethod()
+        }
+    }
+
+    private var desktopIconRow: some View {
+        ToggleRow(icon: "desktopcomputer", iconColor: .cyan,
+                  title: "桌面图标",
+                  toggle: Binding(
+                    get: { state.desktopIconsHidden },
+                    set: { _ in state.toggleDesktopIcons() }
+                  ))
     }
 
     // MARK: - Quick Actions
 
-    private var quickActionsSection: some View {
-        VStack(spacing: 0) {
-            SectionHeader(title: "快捷操作")
-
-            ActionRow(
-                icon: "trash.fill",
-                iconColor: .red,
-                title: "清空废纸篓"
-            ) { state.emptyTrash() }
-
-            ActionRow(
-                icon: "note.text",
-                iconColor: .blue,
-                title: "快速笔记 → Obsidian"
-            ) { showNoteEditor = true }
-
-            ActionRow(
-                icon: "timer",
-                iconColor: .green,
-                title: "番茄钟"
-            ) { showPomodoro.toggle() }
-
-            ActionRow(
-                icon: "doc.on.clipboard",
-                iconColor: .gray,
-                title: "剪贴板历史 (\(state.clipboardHistory.count))"
-            ) { showClipboard.toggle() }
+    private var trashRow: some View {
+        ActionRow(icon: "trash.fill", iconColor: .red, title: "清空废纸篓") {
+            state.emptyTrash()
         }
     }
 
-    // MARK: - Pomodoro
-
-    private var pomodoroSection: some View {
-        PomodoroView()
+    private var noteRow: some View {
+        ActionRow(icon: "note.text", iconColor: .blue, title: "快速笔记 → Obsidian") {
+            showNoteEditor = true
+        }
     }
 
-    // MARK: - Clipboard
+    private var pomodoroRow: some View {
+        ActionRow(icon: "timer", iconColor: .green,
+                  title: showPomodoro ? "收起番茄钟" : "番茄钟") {
+            withAnimation(.easeInOut(duration: 0.2)) { showPomodoro.toggle() }
+        }
+    }
 
-    private var clipboardSection: some View {
-        ClipboardHistoryView(items: state.clipboardHistory)
+    private var clipboardRow: some View {
+        ActionRow(icon: "doc.on.clipboard", iconColor: .gray,
+                  title: "剪贴板历史 (\(state.clipboardHistory.count))") {
+            withAnimation(.easeInOut(duration: 0.2)) { showClipboard.toggle() }
+        }
+    }
+
+    // MARK: - WiFi
+
+    private var wifiRow: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "wifi")
+                .foregroundColor(state.wifiManager.currentSSID.isEmpty ? .secondary : .blue)
+                .font(.system(size: 12))
+                .frame(width: 18)
+            Text(state.wifiManager.currentSSID.isEmpty ? "Wi-Fi" : state.wifiManager.currentSSID)
+                .font(.system(size: 12))
+            Spacer()
+            Button(action: {
+                showWiFiList.toggle()
+                if showWiFiList { state.scanWiFi() }
+            }) {
+                Image(systemName: showWiFiList ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 10))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
     }
 
     // MARK: - Macros
 
-    private var macroSection: some View {
-        VStack(spacing: 0) {
-            SectionHeader(title: "一键场景")
-
-            HStack(spacing: 8) {
-                MacroButton(title: "💼 工作", preset: .work)
-                MacroButton(title: "🌙 深夜", preset: .night)
-                MacroButton(title: "🎤 演示", preset: .presentation)
-                MacroButton(title: "🚪 出门", preset: .leaving)
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+    private var macroRow: some View {
+        HStack(spacing: 6) {
+            macroBtn("💼 工作", .work)
+            macroBtn("🌙 深夜", .night)
+            macroBtn("🎤 演示", .presentation)
+            macroBtn("🚪 出门", .leaving)
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+    }
+
+    private func macroBtn(_ title: String, _ preset: MacroPreset) -> some View {
+        Button(action: { state.activateMacro(preset) }) {
+            Text(title)
+                .font(.system(size: 11, weight: .medium))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(Color.secondary.opacity(0.08))
+                .cornerRadius(6)
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Shortcut
+
+    private var shortcutRow: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "keyboard")
+                .foregroundColor(.yellow)
+                .font(.system(size: 12))
+                .frame(width: 18)
+            Text("全局快捷键")
+                .font(.system(size: 12))
+            Spacer()
+            Text(state.preferredShortcut)
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(Color.secondary.opacity(0.1))
+                .cornerRadius(4)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
     }
 
     // MARK: - Footer
 
-    private var footerSection: some View {
+    private var footerRow: some View {
         HStack {
-            Button("偏好设置") {
-                // Future: settings window
-            }
-            .buttonStyle(.plain)
-            .font(.caption)
-            .foregroundColor(.secondary)
-
+            Button("偏好设置") { }
+                .buttonStyle(.plain)
+                .font(.caption)
+                .foregroundColor(.secondary)
             Spacer()
-
             Button("退出") {
                 NSApplication.shared.terminate(nil)
             }
@@ -186,27 +346,13 @@ struct MenuBarContentView: View {
             .font(.caption)
             .foregroundColor(.secondary)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+        .background(Color.secondary.opacity(0.05))
     }
 }
 
-// MARK: - Sub-views
-
-struct SectionHeader: View {
-    let title: String
-    var body: some View {
-        HStack {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .textCase(.uppercase)
-            Spacer()
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-    }
-}
+// MARK: - Reusable Components
 
 struct ToggleRow: View {
     let icon: String
@@ -218,15 +364,16 @@ struct ToggleRow: View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .foregroundColor(iconColor)
-                .frame(width: 20)
+                .font(.system(size: 12))
+                .frame(width: 18)
             Text(title)
-                .font(.system(size: 13))
+                .font(.system(size: 12))
             Spacer()
             Toggle("", isOn: $toggle)
                 .toggleStyle(.switch)
                 .scaleEffect(0.8)
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 14)
         .padding(.vertical, 6)
     }
 }
@@ -242,78 +389,19 @@ struct ActionRow: View {
             HStack(spacing: 10) {
                 Image(systemName: icon)
                     .foregroundColor(iconColor)
-                    .frame(width: 20)
+                    .font(.system(size: 12))
+                    .frame(width: 18)
                 Text(title)
-                    .font(.system(size: 13))
+                    .font(.system(size: 12))
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .font(.caption2)
-                    .foregroundColor(.secondary.opacity(0.5))
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(.secondary.opacity(0.4))
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-    }
-}
-
-struct MacroButton: View {
-    @EnvironmentObject private var state: AppState
-    let title: String
-    let preset: MacroPreset
-
-    var body: some View {
-        Button(action: { state.activateMacro(preset) }) {
-            Text(title)
-                .font(.system(size: 12))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 6)
-                .background(Color(.controlBackgroundColor))
-                .cornerRadius(6)
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-struct AudioDeviceRow: View {
-    let devices: [AudioDevice]
-    @Binding var selected: String
-    let onRefresh: () -> Void
-    let onSelect: (String) -> Void
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "speaker.wave.2.fill")
-                .foregroundColor(.blue)
-                .frame(width: 20)
-            Text("输出设备")
-                .font(.system(size: 13))
-            Spacer()
-            if devices.isEmpty {
-                Text("未检测到")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            } else {
-                Picker("", selection: $selected) {
-                    ForEach(devices, id: \.name) { device in
-                        Text(device.name).tag(device.name)
-                    }
-                }
-                .pickerStyle(.menu)
-                .scaleEffect(0.9)
-                .onChange(of: selected) { newValue in
-                    onSelect(newValue)
-                }
-            }
-            Button(action: onRefresh) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.caption)
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(.secondary)
-        }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 14)
         .padding(.vertical, 6)
     }
 }
