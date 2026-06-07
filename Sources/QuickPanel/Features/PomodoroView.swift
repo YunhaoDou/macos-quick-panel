@@ -23,7 +23,9 @@ struct PomodoroView: View {
                         }
                         .buttonStyle(.plain)
                     } else {
-                        Button(action: { timer.start() }) {
+                        Button(action: {
+                            timer.start { NSSound.beep() }
+                        }) {
                             Image(systemName: "play.fill")
                                 .font(.caption)
                         }

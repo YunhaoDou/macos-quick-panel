@@ -46,6 +46,20 @@ struct MenuBarContentView: View {
             // ── Search Bar ──
             searchBar
 
+            // ── Feedback Toast ──
+            if state.showFeedback {
+                HStack {
+                    Text(state.feedbackText)
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(.white)
+                    Spacer()
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(Color.accentColor.opacity(0.85))
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+
             Divider().opacity(0.3)
 
             ScrollView(.vertical, showsIndicators: false) {
@@ -212,7 +226,7 @@ struct MenuBarContentView: View {
 
     private var desktopIconRow: some View {
         ToggleRow(icon: "desktopcomputer", iconColor: .cyan,
-                  title: "桌面图标",
+                  title: state.desktopIconsHidden ? "桌面图标 (隐藏)" : "桌面图标",
                   toggle: Binding(
                     get: { state.desktopIconsHidden },
                     set: { _ in state.toggleDesktopIcons() }
