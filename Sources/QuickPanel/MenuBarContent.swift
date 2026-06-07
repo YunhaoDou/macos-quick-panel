@@ -39,7 +39,6 @@ struct MenuBarContentView: View {
     @State private var showPomodoro = false
     @State private var showClipboard = false
     @State private var showNoteEditor = false
-    @State private var showWiFiList = false
     @State private var noteContent = ""
 
     var body: some View {
@@ -81,16 +80,6 @@ struct MenuBarContentView: View {
                     if showClipboard {
                         Divider().opacity(0.3).padding(.vertical, 4)
                         ClipboardHistoryView(items: state.clipboardHistory)
-                    }
-
-                    Divider().opacity(0.3).padding(.vertical, 4)
-
-                    // Wi-Fi
-                    sectionHeader("网络")
-                    wifiRow
-                    if showWiFiList {
-                        WiFiListView()
-                            .environmentObject(state)
                     }
 
                     Divider().opacity(0.3).padding(.vertical, 4)
@@ -256,31 +245,6 @@ struct MenuBarContentView: View {
                   title: "剪贴板历史 (\(state.clipboardHistory.count))") {
             withAnimation(.easeInOut(duration: 0.2)) { showClipboard.toggle() }
         }
-    }
-
-    // MARK: - WiFi
-
-    private var wifiRow: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "wifi")
-                .foregroundColor(state.wifiManager.currentSSID.isEmpty ? .secondary : .blue)
-                .font(.system(size: 12))
-                .frame(width: 18)
-            Text(state.wifiManager.currentSSID.isEmpty ? "Wi-Fi" : state.wifiManager.currentSSID)
-                .font(.system(size: 12))
-            Spacer()
-            Button(action: {
-                showWiFiList.toggle()
-                if showWiFiList { state.scanWiFi() }
-            }) {
-                Image(systemName: showWiFiList ? "chevron.up" : "chevron.down")
-                    .font(.system(size: 10))
-            }
-            .buttonStyle(.plain)
-            .foregroundColor(.secondary)
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 6)
     }
 
     // MARK: - Macros

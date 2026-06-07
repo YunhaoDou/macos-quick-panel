@@ -34,10 +34,6 @@ class AppState: ObservableObject {
     // ── Desktop Icons ──
     @Published var desktopIconsHidden: Bool = DesktopIconsManager.isHidden
 
-    // ── Wi-Fi ──
-    @Published var wifiManager = WiFiManager.shared
-    @Published var showWiFiList = false
-
     // ── Shortcuts ──
     @Published var preferredShortcut: String = "⌥⌘Q" {
         didSet { updateShortcut() }
@@ -111,25 +107,6 @@ class AppState: ObservableObject {
     func toggleDesktopIcons() {
         DesktopIconsManager.toggle()
         desktopIconsHidden = DesktopIconsManager.isHidden
-    }
-
-    // MARK: - Wi-Fi
-
-    func scanWiFi() {
-        wifiManager.scan()
-    }
-
-    func connectWiFi(ssid: String) {
-        guard let network = wifiManager.networks.first(where: { $0.ssid == ssid }) else { return }
-        wifiManager.connect(to: network)
-    }
-
-    func toggleWiFi(_ on: Bool) {
-        wifiManager.toggleWiFi(on)
-        if !on {
-            wifiManager.networks = []
-            wifiManager.currentSSID = ""
-        }
     }
 
     // MARK: - Hotkey
