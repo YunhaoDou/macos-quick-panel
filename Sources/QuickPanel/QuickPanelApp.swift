@@ -24,6 +24,12 @@ class AppState: ObservableObject {
     // ── Desktop Icons ──
     @Published var desktopIconsHidden: Bool = false
 
+    // ── Caffeinate ──
+    @Published var caffeinateManager = CaffeinateManager.shared
+
+    // ── Hidden Files ──
+    @Published var hiddenFilesShown: Bool = false
+
     // ── Shortcuts ──
     @Published var preferredShortcut: String = "⌥⌘Q"
 
@@ -42,6 +48,7 @@ class AppState: ObservableObject {
     init() {
         self.inputMethodLabel = InputMethodManager.currentShortName()
         self.desktopIconsHidden = DesktopIconsManager.isHidden
+        self.hiddenFilesShown = FinderHiddenFilesManager.isShowingHidden
         self.clipboardHistory = ClipboardManager.shared.recentItems
 
         // Start clipboard polling (every 1.5s)
@@ -91,6 +98,57 @@ class AppState: ObservableObject {
         DesktopIconsManager.toggle()
         desktopIconsHidden = DesktopIconsManager.isHidden
         showTempFeedback(desktopIconsHidden ? "桌面图标已隐藏" : "桌面图标已显示")
+    }
+
+    // MARK: - Screenshot
+
+    func screenshot(_ mode: ScreenshotMode) {
+        switch mode {
+        case .region: ScreenshotManager.captureRegion()
+        case .window: ScreenshotManager.captureWindow()
+        case .fullscreen: ScreenshotManager.captureFullscreen()
+        case .clipboard: ScreenshotManager.captureToClipboard()
+        }
+        let names: [ScreenshotMode: String] = [.region: "区域截图", .window: "窗口截图", .fullscreen: "全屏截图", .clipboard: "截图到剪贴板"]
+        showTempFeedback(names[mode] ?? "截图完成")
+    }
+
+    // MARK: - Window Layout
+
+    func tileWindow(_ layout: WindowLayout) {
+        switch layout {
+        case .left: WindowManager.tileLeft()
+        case .right: WindowManager.tileRight()
+        case .maximize: WindowManager.maximize()
+        case .center: WindowManager.center()
+        }
+        let names: [WindowLayout: String] = [.left: "窗口左半", .right: "窗口右半", .maximize: "窗口最大化", .center: "窗口居中"]
+        showTempFeedback(names[layout] ?? "窗口调整完成")
+    }
+
+    // MARK: - Caffeinate
+
+    func toggleCaffeinate() {
+        caffeinateManager.toggle()
+        showTempFeedback(caffeinateManager.isActive ? "阻止休眠已开启" : "阻止休眠已关闭")
+    }
+
+    // MARK: - Hidden Files
+
+    func toggleHiddenFiles() {
+        FinderHiddenFilesManager.toggle()
+        hiddenFilesShown = FinderHiddenFilesManager.isShowingHidden
+        showTempFeedback(hiddenFilesShown ? "隐藏文件已显示" : "隐藏文件已隐藏")
+    }
+
+    // MARK: - Clear Clipboard
+
+    func clearClipboard() {
+        NSPasteboard.general.clearContents()
+        // Also clear our history
+        ClipboardManager.shared.clear()
+        clipboardHistory = []
+        showTempFeedback("剪贴板已清空")
     }
 
     // MARK: - Macros

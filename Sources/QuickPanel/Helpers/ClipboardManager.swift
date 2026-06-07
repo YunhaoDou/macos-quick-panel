@@ -24,6 +24,11 @@ final class ClipboardManager {
         }
     }
 
+    func clear() {
+        recentItems.removeAll()
+        lastChangeCount = 0
+    }
+
     private func addItem(_ text: String) {
         // Avoid duplicates at the top
         recentItems.removeAll { $0 == text }

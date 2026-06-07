@@ -97,6 +97,25 @@ struct MenuBarContentView: View {
 
                     Divider().opacity(0.3).padding(.vertical, 4)
 
+                    // 截图
+                    sectionHeader("截图")
+                    screenshotRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
+                    // 窗口布局
+                    sectionHeader("窗口布局")
+                    windowLayoutRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
+                    // 系统工具
+                    sectionHeader("系统工具")
+                    caffeinateRow
+                    hiddenFilesRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
                     // 快捷键
                     sectionHeader("快捷键")
                     shortcutRow
@@ -203,10 +222,32 @@ struct MenuBarContentView: View {
     }
 
     private var clipboardRow: some View {
-        ActionRow(icon: "doc.on.clipboard", iconColor: .gray,
-                  title: "剪贴板历史 (\(state.clipboardHistory.count))") {
-            withAnimation(.easeInOut(duration: 0.2)) { showClipboard.toggle() }
+        HStack(spacing: 10) {
+            Image(systemName: "doc.on.clipboard")
+                .foregroundColor(.gray)
+                .font(.system(size: 12))
+                .frame(width: 18)
+            Text("剪贴板历史 (\(state.clipboardHistory.count))")
+                .font(.system(size: 12))
+            Spacer()
+            Button(action: { state.clearClipboard() }) {
+                Image(systemName: "xmark.circle")
+                    .font(.system(size: 10))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.red.opacity(0.6))
+            .help("清空剪贴板")
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.2)) { showClipboard.toggle() }
+            }) {
+                Image(systemName: showClipboard ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 10))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
         }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
     }
 
     // MARK: - Macros
@@ -232,6 +273,90 @@ struct MenuBarContentView: View {
                 .cornerRadius(6)
         }
         .buttonStyle(.plain)
+    }
+
+    // MARK: - Screenshot
+
+    private var screenshotRow: some View {
+        HStack(spacing: 6) {
+            btn("区域", .region, "rectangle.dashed")
+            btn("窗口", .window, "macwindow")
+            btn("全屏", .fullscreen, "rectangle.fill")
+            btn("剪贴板", .clipboard, "doc.on.clipboard")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+    }
+
+    private func btn(_ title: String, _ mode: ScreenshotMode, _ icon: String) -> some View {
+        Button(action: { state.screenshot(mode) }) {
+            VStack(spacing: 3) {
+                Image(systemName: icon)
+                    .font(.system(size: 11))
+                Text(title)
+                    .font(.system(size: 9))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background(Color.secondary.opacity(0.08))
+            .cornerRadius(6)
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - Window Layout
+
+    private var windowLayoutRow: some View {
+        HStack(spacing: 6) {
+            winBtn("◧", .left, "左半")
+            winBtn("◨", .right, "右半")
+            winBtn("⛶", .maximize, "全屏")
+            winBtn("⬡", .center, "居中")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 8)
+    }
+
+    private func winBtn(_ icon: String, _ layout: WindowLayout, _ label: String) -> some View {
+        Button(action: { state.tileWindow(layout) }) {
+            VStack(spacing: 3) {
+                Text(icon)
+                    .font(.system(size: 16))
+                Text(label)
+                    .font(.system(size: 9))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 4)
+            .background(Color.secondary.opacity(0.08))
+            .cornerRadius(6)
+        }
+        .buttonStyle(.plain)
+    }
+
+    // MARK: - System Tools
+
+    private var caffeinateRow: some View {
+        ToggleRow(
+            icon: "cup.and.saucer.fill",
+            iconColor: .brown,
+            title: state.caffeinateManager.isActive ? "阻止休眠 (运行中)" : "阻止休眠",
+            toggle: Binding(
+                get: { state.caffeinateManager.isActive },
+                set: { _ in state.toggleCaffeinate() }
+            )
+        )
+    }
+
+    private var hiddenFilesRow: some View {
+        ToggleRow(
+            icon: "eye.slash.fill",
+            iconColor: .gray,
+            title: state.hiddenFilesShown ? "显示隐藏文件" : "隐藏文件",
+            toggle: Binding(
+                get: { state.hiddenFilesShown },
+                set: { _ in state.toggleHiddenFiles() }
+            )
+        )
     }
 
     // MARK: - Shortcut
