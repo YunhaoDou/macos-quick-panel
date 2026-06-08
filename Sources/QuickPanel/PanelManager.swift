@@ -168,6 +168,12 @@ struct MainPanelView: View {
 
                     Divider().opacity(0.3).padding(.vertical, 4)
 
+                    // API 用量
+                    sectionHeader("API")
+                    panelDeepSeekRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
                     // 一键场景
                     sectionHeader("一键场景")
                     panelMacroRow
@@ -313,6 +319,24 @@ struct MainPanelView: View {
         ToggleRow(icon: "eye.slash.fill", iconColor: .gray,
                   title: state.hiddenFilesShown ? "显示隐藏文件" : "隐藏文件",
                   toggle: Binding(get: { state.hiddenFilesShown }, set: { _ in state.toggleHiddenFiles() }))
+    }
+
+    private var panelDeepSeekRow: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "brain.head.profile")
+                .foregroundColor(.accentColor).font(.system(size: 12)).frame(width: 18)
+            Text("DeepSeek").font(.system(size: 12))
+            Spacer()
+            if state.deepSeek.isLoading {
+                ProgressView().scaleEffect(0.6).frame(width: 14, height: 14)
+            } else {
+                Text(state.deepSeek.formattedBalance)
+                    .font(.system(size: 11, design: .monospaced)).foregroundColor(.secondary)
+            }
+            Button(action: { state.deepSeek.refresh() }) {
+                Image(systemName: "arrow.clockwise").font(.system(size: 10))
+            }.buttonStyle(.plain).foregroundColor(.secondary)
+        }.padding(.horizontal, 16).padding(.vertical, 6)
     }
 
     private var panelMacroRow: some View {

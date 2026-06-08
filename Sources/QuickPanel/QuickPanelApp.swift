@@ -41,6 +41,9 @@ class AppState: ObservableObject {
     // ── Updater ──
     @Published var updater = AppUpdater.shared
 
+    // ── DeepSeek ──
+    @Published var deepSeek = DeepSeekManager.shared
+
     // ── Pomodoro (persistent across views) ──
     @Published var pomodoroTimer = PomodoroTimer()
 

@@ -116,6 +116,12 @@ struct MenuBarContentView: View {
 
                     Divider().opacity(0.3).padding(.vertical, 4)
 
+                    // API 用量
+                    sectionHeader("API")
+                    deepSeekRow
+
+                    Divider().opacity(0.3).padding(.vertical, 4)
+
                     // 快捷键
                     sectionHeader("快捷键")
                     shortcutRow
@@ -357,6 +363,35 @@ struct MenuBarContentView: View {
                 set: { _ in state.toggleHiddenFiles() }
             )
         )
+    }
+
+    // MARK: - DeepSeek
+
+    private var deepSeekRow: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "brain.head.profile")
+                .foregroundColor(.accentColor)
+                .font(.system(size: 12))
+                .frame(width: 18)
+            Text("DeepSeek")
+                .font(.system(size: 12))
+            Spacer()
+            if state.deepSeek.isLoading {
+                ProgressView().scaleEffect(0.6).frame(width: 14, height: 14)
+            } else {
+                Text(state.deepSeek.formattedBalance)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundColor(.secondary)
+            }
+            Button(action: { state.deepSeek.refresh() }) {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 10))
+            }
+            .buttonStyle(.plain)
+            .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
     }
 
     // MARK: - Shortcut

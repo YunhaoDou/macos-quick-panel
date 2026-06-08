@@ -41,6 +41,11 @@ struct PreferencesView: View {
 
                     Divider()
 
+                    // ── DeepSeek ──
+                    deepSeekSection
+
+                    Divider()
+
                     // ── About ──
                     aboutSection
                 }
@@ -166,6 +171,53 @@ struct PreferencesView: View {
             Text("快捷键在应用启动时注册，修改后需重启生效")
                 .font(.caption)
                 .foregroundColor(.secondary)
+        }
+    }
+
+    // MARK: - DeepSeek Section
+
+    private var deepSeekSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: "brain.head.profile")
+                    .foregroundColor(.accentColor)
+                Text("DeepSeek API")
+                    .font(.system(size: 13, weight: .medium))
+            }
+
+            HStack {
+                TextField("API Key", text: Binding(
+                    get: { appState.deepSeek.apiKey },
+                    set: { appState.deepSeek.apiKey = $0 }
+                ))
+                .textFieldStyle(.roundedBorder)
+                .font(.system(size: 11))
+                .frame(height: 22)
+                .disableAutocorrection(true)
+
+                Button(action: { appState.deepSeek.refresh() }) {
+                    if appState.deepSeek.isLoading {
+                        ProgressView().scaleEffect(0.5).frame(width: 14, height: 14)
+                    } else {
+                        Text("测试")
+                            .font(.caption)
+                    }
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.blue)
+            }
+
+            HStack {
+                Text(appState.deepSeek.formattedBalance)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundColor(.secondary)
+                Spacer()
+                if !appState.deepSeek.errorMessage.isEmpty {
+                    Text(appState.deepSeek.errorMessage)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
+            }
         }
     }
 
