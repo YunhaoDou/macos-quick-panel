@@ -8,7 +8,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 APP_NAME="QuickPanel"
 APP_PATH="$PROJECT_DIR/dist/$APP_NAME.app"
-DMG_NAME="${APP_NAME}-v1.1.1"
+
+# Read version from AppUpdater
+VERSION=$(grep 'currentVersion' "$PROJECT_DIR/Sources/QuickPanel/Helpers/AppUpdater.swift" | grep -o '"[0-9.]*"' | tr -d '"')
+DMG_NAME="${APP_NAME}-v${VERSION}"
 DMG_PATH="$PROJECT_DIR/dist/$DMG_NAME.dmg"
 STAGING_DIR="/tmp/${APP_NAME}_dmg"
 
