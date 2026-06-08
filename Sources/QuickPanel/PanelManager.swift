@@ -97,6 +97,11 @@ struct MainPanelView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // ── DeepSeek Hero ──
+            panelDeepSeekHero
+
+            Divider().opacity(0.3)
+
             // Header
             HStack {
                 Image(systemName: "square.grid.2x2")
@@ -165,12 +170,6 @@ struct MainPanelView: View {
                     sectionHeader("系统工具")
                     panelCaffeinateRow
                     panelHiddenRow
-
-                    Divider().opacity(0.3).padding(.vertical, 4)
-
-                    // API 用量
-                    sectionHeader("API")
-                    panelDeepSeekRow
 
                     Divider().opacity(0.3).padding(.vertical, 4)
 
@@ -321,22 +320,74 @@ struct MainPanelView: View {
                   toggle: Binding(get: { state.hiddenFilesShown }, set: { _ in state.toggleHiddenFiles() }))
     }
 
-    private var panelDeepSeekRow: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "brain.head.profile")
-                .foregroundColor(.accentColor).font(.system(size: 12)).frame(width: 18)
-            Text("DeepSeek").font(.system(size: 12))
-            Spacer()
-            if state.deepSeek.isLoading {
-                ProgressView().scaleEffect(0.6).frame(width: 14, height: 14)
-            } else {
-                Text(state.deepSeek.formattedBalance)
-                    .font(.system(size: 11, design: .monospaced)).foregroundColor(.secondary)
+    private var panelDeepSeekHero: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 8) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(LinearGradient(gradient: Gradient(colors: [.blue, .purple]),
+                                              startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .frame(width: 32, height: 32)
+                    Image(systemName: "brain.head.profile")
+                        .font(.system(size: 15, weight: .medium)).foregroundColor(.white)
+                }
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("DeepSeek").font(.system(size: 12, weight: .semibold))
+                    Text(state.deepSeek.isAvailable ? "已连接" : "未连接")
+                        .font(.system(size: 9)).foregroundColor(state.deepSeek.isAvailable ? .green : .secondary)
+                }
+                Spacer()
+                Button(action: { state.deepSeek.refresh() }) {
+                    if state.deepSeek.isLoading {
+                        ProgressView().scaleEffect(0.5).frame(width: 12, height: 12)
+                    } else {
+                        Image(systemName: "arrow.clockwise").font(.system(size: 10))
+                    }
+                }.buttonStyle(.plain).foregroundColor(.secondary)
             }
-            Button(action: { state.deepSeek.refresh() }) {
-                Image(systemName: "arrow.clockwise").font(.system(size: 10))
-            }.buttonStyle(.plain).foregroundColor(.secondary)
-        }.padding(.horizontal, 16).padding(.vertical, 6)
+            .padding(.horizontal, 16).padding(.top, 14).padding(.bottom, 6)
+
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                if state.deepSeek.errorMessage.isEmpty || state.deepSeek.isLoading {
+                    Text(state.deepSeek.formattedBalance)
+                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                        .foregroundColor(panelBalanceColor)
+                    Text(state.deepSeek.currency)
+                        .font(.system(size: 16, weight: .medium)).foregroundColor(.secondary)
+                        .baselineOffset(-6)
+                } else {
+                    Text(state.deepSeek.errorMessage).font(.system(size: 11)).foregroundColor(.red)
+                }
+            }
+            .padding(.horizontal, 16).padding(.bottom, 4)
+
+            HStack(spacing: 16) {
+                pdItem("充值", state.deepSeek.toppedUpBalance)
+                pdItem("赠送", state.deepSeek.grantedBalance)
+                Spacer()
+                if !state.deepSeek.lastUpdated.isEmpty {
+                    Text("更新: \(state.deepSeek.lastUpdated)")
+                        .font(.system(size: 9)).foregroundColor(.secondary.opacity(0.6))
+                }
+            }
+            .padding(.horizontal, 16).padding(.bottom, 10)
+        }
+    }
+
+    private func pdItem(_ title: String, _ value: String) -> some View {
+        HStack(spacing: 3) {
+            Text(title).font(.system(size: 9)).foregroundColor(.secondary)
+            Text(value).font(.system(size: 11, weight: .medium, design: .monospaced)).foregroundColor(.primary)
+        }
+    }
+
+    private var panelBalanceColor: Color {
+        switch state.deepSeek.balanceStatusColor {
+        case "empty": return .red
+        case "low": return .orange
+        case "medium": return .yellow
+        default: return .primary
+        }
     }
 
     private var panelMacroRow: some View {
