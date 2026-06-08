@@ -64,7 +64,7 @@ struct PreferencesView: View {
             }
             .padding()
         }
-        .modifier(GlassBackground())
+        .glassBackground(border: 0.08)
         .frame(width: 380, height: 420)
     }
 

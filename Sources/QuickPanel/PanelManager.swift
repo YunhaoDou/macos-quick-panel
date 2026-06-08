@@ -66,8 +66,8 @@ final class PanelManager: ObservableObject {
 
         let contentView = MainPanelView()
             .environmentObject(appState)
-            .modifier(GlassBackground())
-
+            .glassBackground(border: 0.08)
+            .frame(width: 320, height: 580)
         panel?.contentView = NSHostingView(rootView: contentView)
         panel?.contentView?.frame = NSRect(x: 0, y: 0, width: 320, height: 580)
 
@@ -206,7 +206,7 @@ struct MainPanelView: View {
         }
         .sheet(isPresented: $showNoteEditor) {
             QuickNoteEditor(content: $noteContent)
-                .modifier(GlassBackground())
+                .glassBackground(border: 0.08)
         }
         .sheet(isPresented: $showPreferences) {
             PreferencesView()

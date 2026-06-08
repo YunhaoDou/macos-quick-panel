@@ -1,37 +1,5 @@
 import SwiftUI
 
-// MARK: - 毛玻璃背景 wrapper
-struct GlassBackground: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .background(
-                VisualEffectView(
-                    material: .hudWindow,
-                    blendingMode: .behindWindow
-                )
-            )
-    }
-}
-
-// MARK: - AppKit NSVisualEffectView bridge
-struct VisualEffectView: NSViewRepresentable {
-    let material: NSVisualEffectView.Material
-    let blendingMode: NSVisualEffectView.BlendingMode
-
-    func makeNSView(context: Context) -> NSVisualEffectView {
-        let view = NSVisualEffectView()
-        view.material = material
-        view.blendingMode = blendingMode
-        view.state = .active
-        return view
-    }
-
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-        nsView.material = material
-        nsView.blendingMode = blendingMode
-    }
-}
-
 // MARK: - Main Menu View
 
 struct MenuBarContentView: View {
@@ -134,10 +102,10 @@ struct MenuBarContentView: View {
             // ── Footer ──
             footerRow
         }
-        .modifier(GlassBackground())
+        .glassBackground()
         .sheet(isPresented: $showNoteEditor) {
             QuickNoteEditor(content: $noteContent)
-                .modifier(GlassBackground())
+                .glassBackground()
         }
         .sheet(isPresented: $showPreferences) {
             PreferencesView()
