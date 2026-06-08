@@ -6,9 +6,17 @@ struct QuickPanelApp: App {
     @StateObject private var appState = AppState()
 
     var body: some Scene {
-        MenuBarExtra("QuickPanel", systemImage: appState.menuIcon) {
+        MenuBarExtra {
             MenuBarContentView()
                 .environmentObject(appState)
+        } label: {
+            if appState.pomodoroTimer.state.isRunning {
+                Text(appState.pomodoroTimer.formattedTime)
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .monospacedDigit()
+            } else {
+                Label("QuickPanel", systemImage: "square.grid.2x2")
+            }
         }
         .menuBarExtraStyle(.window)
     }
